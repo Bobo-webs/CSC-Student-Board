@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Admin Sign Up - Student Board</title>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, shrink-to-fit=no"
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <!-- Styling -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+      integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+      crossorigin="anonymous"
+      referrerpolicy="no-referrer"
+    />
+    <link
+      rel="stylesheet"
+      href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link rel="stylesheet" href="/assets/css/register.css" />
+    <link rel="icon" href="/assets/img/logo.png" />
+
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-database.js"></script>
+  </head>
+  <body>
+    <section class="ftco-section">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-md-7 col-lg-5">
+            <div class="login-wrap p-4 p-md-5">
+              <a class="brand" href="index.html"
+                ><img src="/assets/img/logo.png" alt="logo" />
+                <h1>Student Board</h1>
+              </a>
+              <h4 class="mb-4" style="font-weight: 500; font-size: 1.3rem">
+                Create an account 🧾
+              </h4>
+              <!-- Danger Alert Popup -->
+              <div id="danger-popup" class="danger-popup">
+                <p>⚠️</p>
+                <p id="danger-message"></p>
+              </div>
+              <form action="/" id="form" class="signup-form">
+                <div class="form-group">
+                  <label class="label" for="firstname">Username</label>
+                  <input type="text" id="firstname" class="form-control" />
+                  <div class="error"></div>
+                </div>
+                <div class="form-group">
+                  <label class="label" for="lastname">Full Name</label>
+                  <input type="text" id="lastname" class="form-control" />
+                  <div class="error"></div>
+                </div>
+                <div class="form-group">
+                  <label class="label" for="email">Email Address</label>
+                  <input type="email" id="email" class="form-control" />
+                  <div class="error"></div>
+                </div>
+                <div class="form-group">
+                  <label class="label" for="password">Password</label>
+                  <input id="password" type="password" class="form-control" />
+                  <i
+                    class="fa-solid fa-eye"
+                    onclick="togglePassword('password', this)"
+                  ></i>
+                  <i
+                    class="fa-solid fa-eye-slash"
+                    onclick="togglePassword('password', this)"
+                  ></i>
+                  <div class="error"></div>
+                </div>
+
+                <div class="form-group">
+                  <label class="label" for="password2">Confirm Password</label>
+                  <input id="password2" type="password" class="form-control" />
+                  <i
+                    class="fa-solid fa-eye"
+                    onclick="togglePassword('password2', this)"
+                  ></i>
+                  <i
+                    class="fa-solid fa-eye-slash"
+                    onclick="togglePassword('password2', this)"
+                  ></i>
+                  <div class="error"></div>
+                </div>
+
+                <p class="text-center">
+                  Already have an account? <a href="login.html">Sign In</a>
+                </p>
+
+                <div class="form-group d-flex justify-content-end mt-5">
+                  <button
+                    type="submit"
+                    id="submit"
+                    class="btn btn-primary submit"
+                  >
+                    <span class="fa fa-paper-plane"></span>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Popup Prompt -->
+    <div id="popup" class="popup">
+      <div class="popup-content">
+        <img src="./assets/img/checked.png" alt="login-success" />
+        <span class="close" onclick="closePopup()"></span>
+        <p id="popup-message"></p>
+        <p>
+          Redirecting to Login Page <br />
+          please wait...
+        </p>
+      </div>
+    </div>
+
+    <!-- -------- Script ------- -->
+    <script type="module" src="/assets/js/register.js" defer></script>
+    <script>
+      // Password toggle fx
+      function togglePassword(inputId, icon) {
+        const input = document.getElementById(inputId);
+        const isPasswordHidden = input.type === "password";
+
+        // Toggle input type
+        input.type = isPasswordHidden ? "text" : "password";
+
+        // Toggle visibility of icons
+        const eyeIcon = icon.parentElement.querySelector(".fa-eye");
+        const eyeSlashIcon = icon.parentElement.querySelector(".fa-eye-slash");
+
+        if (isPasswordHidden) {
+          eyeIcon.style.display = "inline";
+          eyeSlashIcon.style.display = "none";
+        } else {
+          eyeIcon.style.display = "none";
+          eyeSlashIcon.style.display = "inline";
+        }
+      }
+
+      // Ensure correct initial state
+      document.addEventListener("DOMContentLoaded", function () {
+        document
+          .querySelectorAll(".fa-eye")
+          .forEach((icon) => (icon.style.display = "none"));
+      });
+    </script>
+  </body>
+</html>

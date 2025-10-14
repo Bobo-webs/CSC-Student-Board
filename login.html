@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Log In - Student Board</title>
+    <!-- Meta tag Keywords -->
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="UTF-8" />
+    <meta name="keywords" content="Log In - Student Board" />
+    <!-- //Meta tag Keywords -->
+    <link
+      href="//fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="icon" href="assets/img/logo.png" />
+    <!--/Style-CSS -->
+    <link
+      rel="stylesheet"
+      href="assets/css/login.css"
+      type="text/css"
+      media="all"
+    />
+    <!--//Style-CSS -->
+
+    <!--//-Js -->
+    <script type="module" src="/assets/js/login.js" defer></script>
+    <!--//Js -->
+
+    <link
+      rel="stylesheet"
+      href="css/font-awesome.min.css"
+      type="text/css"
+      media="all"
+    />
+  </head>
+
+  <body>
+    <!-- form section start -->
+    <section class="w3l-hotair-form">
+      <a href="index.html" class="logo-wrapper">
+        <span class="span-logo">
+          <img
+            class="logo-img"
+            src="/assets/img/logo.png"
+            loading="lazy"
+            alt="logo"
+          />
+          <h2 style="color: #fff;">Student Board</h2>
+        </span>
+      </a>
+      <div class="container">
+        <!-- /form -->
+        <div class="workinghny-form-grid">
+          <div class="main-hotair">
+            <div class="content-wthree">
+              <h2>Admin Sign In</h2>
+              <form id="loginDiv">
+                <input
+                  type="email"
+                  id="email"
+                  class="text"
+                  name="text"
+                  placeholder="Email"
+                  aria-invalid="false"
+                  required=""
+                  autofocus
+                />
+                <input
+                  type="password"
+                  class="password"
+                  id="password"
+                  name="password"
+                  placeholder="Password"
+                  aria-invalid="false"
+                  required=""
+                  autofocus
+                />
+                <label class="show-label">
+                  <input
+                    type="checkbox"
+                    id="showPasswordCheckbox"
+                    onclick="togglePassword()"
+                    class="show-password"
+                  />
+                  Show Password
+                </label>
+                <div
+                  class="error"
+                  aria-errormessage="Invalid email or password."
+                  id="error"
+                >
+                  <p>You have entered an invalid email or password.</p>
+                </div>
+                <button class="btn" type="submit" id="submit">Log In</button>
+              </form>
+
+              <p class="account">
+                Don't have an account? <a href="register.html">Register</a>
+              </p>
+              <p class="account">
+                Forgot Password? <a href="forgot.html">Reset</a>
+              </p>
+            </div>
+            <div class="w3l_form align-self">
+              <div class="left_grid_info">
+                <img src="assets/img/admin.png" alt="" class="img-fluid" />
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- //form -->
+      </div>
+      <!-- copyright-->
+      <div class="copyright text-center">
+        <p class="copy-footer-29">
+          © 2025 All Rights Reserved. Federal University of Technology Owerri
+        </p>
+      </div>
+      <!-- //copyright-->
+    </section>
+    <!-- //form section start -->
+
+    <!-- //Error and Success Popup -->
+    <div id="popup-success" class="popup">
+      <div class="popup-content">
+        <img src="./assets/img/checked.png" alt="" />
+        <h2>Login Successful!</h2>
+        <p>Please wait...</p>
+      </div>
+    </div>
+    
+
+    <!-- //Script -->
+    <!-- --------- Show password Script ----------- -->
+    <script>
+      function togglePassword() {
+        const passwordField = document.getElementById("password");
+        const checkbox = document.getElementById("showPasswordCheckbox");
+
+        if (checkbox.checked) {
+          passwordField.type = "text";
+        } else {
+          passwordField.type = "password";
+        }
+      }
+    </script>
+  </body>
+</html>

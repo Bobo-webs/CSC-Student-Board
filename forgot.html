@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Reset Password - Robinhoodfx</title>
+    <link
+      href="assets/css/forgot.css"
+      rel="stylesheet"
+      type="text/css"
+      media="all"
+    />
+    <link rel="icon" href="assets/img/logo.png" />
+    <!-- Custom Theme files -->
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1, maximum-scale=1"
+    />
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta
+      name="keywords"
+      content="Reset Password Form Responsive, Login form web template, Sign up Web Templates, Flat Web Templates, Login signup Responsive web template, Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design"
+    />
+    <!--google fonts-->
+    <link
+      href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <!--element start here-->
+    <div class="elelment">
+      <a href="index.html" class="logo-wrapper">
+        <span class="span-logo">
+          <img
+            class="logo-img"
+            src="/assets/img/logo.png"
+            loading="lazy"
+            alt="logo"
+          />
+          <h1>Student Board</h1>
+        </span>
+      </a>
+      <div class="element-main">
+        <h3 style="font-size: 20px; text-align: center">Reset Password</h3>
+        <p>
+          If you've forgotten your password, we'll send you an email with
+          instructions to reset it.
+        </p>
+        <form id="resetForm">
+          <input
+            type="email"
+            id="email"
+            placeholder="Email Address"
+            required=""
+          />
+          <input id="submit" type="submit" value="Reset" />
+          <p class="account">
+            Back to <a href="login.html" style="color: #554606ea">Login</a>
+          </p>
+        </form>
+      </div>
+    </div>
+    <div class="copy-right">
+      <p>© 2025 All Rights Reserved. Federal University of Technology Owerri</p>
+    </div>
+
+    <!-- ------------------------------- Error and Success Popup -------------------------- -->
+    <!-- Popup Notification Container -->
+    <div id="popup" class="popup success">
+      <span id="popupMessage">Success! Your action was successful.</span>
+      <button id="closeBtn">&times;</button>
+    </div>
+
+    <button
+      onclick="showPopup('Success! You have completed the action successfully.')"
+    ></button>
+
+    <!--element end here-->
+    <!-- ---------------------------- Validation Script --------------------------- -->
+    <script type="module">
+      // Import Firebase modules
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
+      import {
+        getAuth,
+        sendPasswordResetEmail,
+      } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js";
+
+      // Firebase configuration
+      const firebaseConfig = {
+        apiKey: "AIzaSyBr41oUYa1OarPVkA7oTZ5U80yeDmLuewY",
+        authDomain: "robinhood-fx.firebaseapp.com",
+        projectId: "robinhood-fx",
+        storageBucket: "robinhood-fx.appspot.com",
+        messagingSenderId: "274862764153",
+        appId: "1:274862764153:web:7f0796a69966dc779fa4a8",
+        measurementId: "G-KNHNN8YDXY",
+        databaseURL: "https://robinhood-fx-default-rtdb.firebaseio.com",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      const auth = getAuth(app);
+
+      // Function to show the popup notification
+      function showPopup(message, type = "success") {
+        const popup = document.getElementById("popup");
+        const popupMessage = document.getElementById("popupMessage");
+
+        // Set the message and type of the popup
+        popupMessage.innerHTML = `<strong>${
+          type.charAt(0).toUpperCase() + type.slice(1)
+        }!</strong> ${message}`;
+        popup.className = `popup ${type}`;
+
+        // Show the popup
+        popup.classList.add("show");
+
+        // Automatically hide after 3 seconds
+        setTimeout(() => {
+          popup.classList.remove("show");
+        }, 3000);
+      }
+
+      // Add event listener to the form
+      document
+        .getElementById("resetForm")
+        .addEventListener("submit", (event) => {
+          event.preventDefault();
+
+          const email = document.getElementById("email").value.trim();
+
+          if (!email) {
+            showPopup("Please enter a valid email address.", "error");
+            return;
+          }
+
+          sendPasswordResetEmail(auth, email)
+            .then(() => {
+              showPopup("A password reset email was sent.", "success");
+            })
+            .catch((error) => {
+              showPopup(`${error.message}`, "error");
+            });
+        });
+
+      // Event listener to close the popup manually
+      document.getElementById("closeBtn").addEventListener("click", () => {
+        const popup = document.getElementById("popup");
+        popup.classList.remove("show");
+      });
+    </script>
+  </body>
+</html>

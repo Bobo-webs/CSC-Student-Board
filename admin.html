@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+
+    <!-- ======= Styles ====== -->
+    <link rel="icon" href="./assets/images/logo-icon.jpg">
+    <link rel="stylesheet" href="./assets/css/admin.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    <!-- ======== Script ======= -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-database.js"></script>
+    <script type="module" src="./assets/js/admin.js"></script>
+</head>
+
+<body>
+    <!-- ======================= Loading ======================== -->
+    <div id="progress-bar-container">
+        <div id="progress-bar"></div>
+    </div>
+    <div id="loading-screen" class="loading">Loading...</div>
+
+    <!-- =============== Navigation ================ -->
+    <div class="container" id="dashboard-content" style="display: none;">
+        <div class="navigation">
+            <ul>
+                <li>
+                    <a href="index.html">
+                        <span class="icon">
+                            <img src="./assets/images/logo.png" alt="">
+                        </span>
+                        <span class="title brand">
+                            <h3>Robinhood<span style="color: limegreen;">Fx</span></h3>
+                        </span>
+                    </a>
+                </li>
+
+                <li class="active-link">
+                    <a href="admin.html">
+                        <span class="icon">
+                            <i class="fa-solid fa-layer-group"></i>
+                        </span>
+                        <span class="title">Dashboard</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a id="logoutButton">
+                        <span class="icon">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                        </span>
+                        <span class="title">Sign Out</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- ========================= Main ==================== -->
+        <div class="main">
+            <div class="topbar">
+                <div></div>
+                <div class="toggle">
+                    <img src="./assets/images/menu.png" alt="">
+                </div>
+
+                <div class="search">
+                    <input id="searchInput" type="search" placeholder="🔎Search user by name">
+                </div>
+
+                <div class="settings">
+                    <a href="admin.html">
+                        🏠
+                    </a>
+                </div>
+            </div>
+
+            <!-- ======================= Admin dashboard ================== -->
+            <h1 style="color: #fff;">ADMIN DASHBOARD</h1>
+            <div id="admin-dashboard">
+                <table id="users-table">
+                    <thead>
+                        <tr>
+                            <th>User's Name</th>
+                            <th>Email</th>
+                            <th>Balance</th>
+                            <th>Investments</th>
+                            <th>Deposists</th>
+                            <th>Referrals</th>
+                            <th style="color: red;">Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-list">
+                        <!-- User rows will be populated here -->
+                    </tbody>
+                </table>
+            </div>
+            <!-- 
+            <div id="admin-dashboard">
+                <h2>Transactions Data</h2>
+                <table id="users-table">
+                    <thead>
+                        <tr>
+                            <th>Full Name</th>
+                            <th>Email</th>
+                            <th>Type</th>
+                            <th>Price</th>
+                            <th>Date</th>
+                            <th>Status</th>
+                            <th style="color: red;">Delete</th>
+                        </tr>
+                    </thead>
+                    <tbody id="users-list">
+                        User rows will be populated here
+                    </tbody>
+                </table>
+            </div>
+            -->
+
+
+            <!-- ========================== Popups ====================== -->
+            <div id="confirmationPopup" class="popup">
+                <div class="popup-content">
+                    <span id="confirmationMessage">Are you sure you want to log out?</span>
+                    <div>
+                        <button id="confirmYes" class="confirm-button">Yes</button>
+                        <button id="confirmNo" class="confirm-button">No</button>
+                    </div>
+                </div>
+            </div>
+            <div id="popup" class="popup">
+                <span id="popup-message"></span>
+                <span class="close-popup">&times;</span>
+            </div>
+
+            <!-- =================== Scripts =====================  -->
+            <script>
+                // ==================== Menu Toggle ===================== //
+                let toggle = document.querySelector(".toggle");
+                let navigation = document.querySelector(".navigation");
+                let main = document.querySelector(".main");
+
+                toggle.onclick = function () {
+                    navigation.classList.toggle("active");
+                    main.classList.toggle("active");
+                };
+
+                // ============== Hide Figures Fx ============ //
+                document.addEventListener("DOMContentLoaded", function () {
+                    const eyeIcon = document.getElementById("eye");
+                    const eyeSlashIcon = document.getElementById("eye-slash");
+                    const numbersElements = document.querySelectorAll(".numbers");
+
+                    function toggleVisibility(show) {
+                        numbersElements.forEach(element => {
+                            if (show) {
+                                // Show original content
+                                element.innerHTML = element.getAttribute("data-value");
+                            } else {
+                                // Mask content
+                                element.innerHTML = "****";
+                            }
+                        });
+                        eyeIcon.style.display = show ? 'none' : 'inline';
+                        eyeSlashIcon.style.display = show ? 'inline' : 'none';
+                    }
+
+                    eyeIcon.addEventListener("click", function () {
+                        toggleVisibility(true);
+                    });
+
+                    eyeSlashIcon.addEventListener("click", function () {
+                        toggleVisibility(false);
+                    });
+
+                    // Initial state
+                    toggleVisibility(false);
+                });
+
+                // ========== Close popup when clicking outside of it ========== //
+                window.onclick = function (event) {
+                    const popup = document.getElementById('popup');
+                    if (event.target === popup) {
+                        popup.style.display = 'none';
+                    }
+                }
+
+                // Close popup when clicking the close button
+                document.querySelector('.close-popup').onclick = function () {
+                    document.getElementById('popup').style.display = 'none';
+                }
+            </script>
+</body>
+
+</html>
