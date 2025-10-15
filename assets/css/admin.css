@@ -48,8 +48,8 @@ input {
   --gray: #f5f5f5;
   --black1: #222;
   --black2: #f3f3f3;
-  --pry-color: #000;
-  --logo-color: limegreen;
+  --pry-color: #554606ea;
+  --pry-hover: #382e05ea;
 }
 
 .fx {
@@ -60,7 +60,7 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
   font-family: "Poppins";
-  color: var(--white);
+  color: #000;
   background-color: var(--pry-color);
 }
 
@@ -87,144 +87,49 @@ body {
   background-color: var(--logo-color);
 }
 
-/* Absolute Center Spinner */
-.loading {
+/* Loading overlay base */
+#loading-overlay {
   position: fixed;
-  z-index: 999;
-  height: 2em;
-  width: 2em;
-  overflow: visible;
-  margin: auto;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  right: 0;
+  inset: 0;
+  background: var(--pry-color);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.5s ease;
 }
 
-/* Transparent Overlay */
-.loading:before {
-  content: "";
-  display: block;
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background-color: var(--pry-color);
+/* Spinner animation */
+.loader {
+  width: 50px;
+  height: 50px;
+  border: 5px solid #ffffff33;
+  border-top: 5px solid #fff;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
 
-/* :not(:required) hides these rules from IE9 and below */
-.loading:not(:required) {
-  /* hide "loading..." text */
-  font: 0/0 a;
-  color: transparent;
-  text-shadow: none;
-  background-color: transparent;
-  border: 0;
-}
-
-.loading:not(:required):after {
-  content: "";
-  display: block;
-  font-size: 10px;
-  width: 1em;
-  height: 1em;
-  margin-top: -0.5em;
-  -webkit-animation: spinner 1500ms infinite linear;
-  -moz-animation: spinner 1500ms infinite linear;
-  -ms-animation: spinner 1500ms infinite linear;
-  -o-animation: spinner 1500ms infinite linear;
-  animation: spinner 1500ms infinite linear;
-  border-radius: 0.5em;
-  -webkit-box-shadow: #fff 1.5em 0 0 0, #fff 1.1em 1.1em 0 0, #fff 0 1.5em 0 0,
-    #fff -1.1em 1.1em 0 0, #fff -1.5em 0 0 0, #fff -1.1em -1.1em 0 0,
-    #fff 0 -1.5em 0 0, #fff 1.1em -1.1em 0 0;
-  box-shadow: #fff 1.5em 0 0 0, #fff 1.1em 1.1em 0 0, #fff 0 1.5em 0 0,
-    #fff -1.1em 1.1em 0 0, #fff -1.5em 0 0 0, #fff -1.1em -1.1em 0 0,
-    #fff 0 -1.5em 0 0, #fff 1.1em -1.1em 0 0;
-}
-
-/* ------- Animation ---------- */
-
-@-webkit-keyframes spinner {
-  0% {
-    -webkit-transform: rotate(0deg);
-    -moz-transform: rotate(0deg);
-    -ms-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
+/* Spinner keyframes */
+@keyframes spin {
+  from {
     transform: rotate(0deg);
   }
 
-  100% {
-    -webkit-transform: rotate(360deg);
-    -moz-transform: rotate(360deg);
-    -ms-transform: rotate(360deg);
-    -o-transform: rotate(360deg);
+  to {
     transform: rotate(360deg);
   }
 }
 
-@-moz-keyframes spinner {
-  0% {
-    -webkit-transform: rotate(0deg);
-    -moz-transform: rotate(0deg);
-    -ms-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
 
-  100% {
-    -webkit-transform: rotate(360deg);
-    -moz-transform: rotate(360deg);
-    -ms-transform: rotate(360deg);
-    -o-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-
-@-o-keyframes spinner {
-  0% {
-    -webkit-transform: rotate(0deg);
-    -moz-transform: rotate(0deg);
-    -ms-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-
-  100% {
-    -webkit-transform: rotate(360deg);
-    -moz-transform: rotate(360deg);
-    -ms-transform: rotate(360deg);
-    -o-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes spinner {
-  0% {
-    -webkit-transform: rotate(0deg);
-    -moz-transform: rotate(0deg);
-    -ms-transform: rotate(0deg);
-    -o-transform: rotate(0deg);
-    transform: rotate(0deg);
-  }
-
-  100% {
-    -webkit-transform: rotate(360deg);
-    -moz-transform: rotate(360deg);
-    -ms-transform: rotate(360deg);
-    -o-transform: rotate(360deg);
-    transform: rotate(360deg);
-  }
-}
 
 /* =============== Navigation ================ */
 .navigation {
   position: fixed;
   width: 200px;
   height: 100%;
-  background: var(--black1);
-  border-left: 10px solid var(--black1);
+  background: var(--pry-color);
+  border-left: 10px solid var(--pry-color);
   transition: 0.5s;
   overflow: hidden;
 }
@@ -249,7 +154,7 @@ body {
 }
 
 .navigation ul li:nth-child(3) {
-  margin-top: 20vh;
+  margin-top: 40vh;
 }
 
 .navigation ul li:hover {
@@ -346,7 +251,7 @@ body {
   left: 200px;
   height: 100%;
   min-height: 100vh;
-  background-color: var(--pry-color);
+  background-color: #fff;
   transition: 0.5s;
   display: flex;
   display: -ms-flexbox;
@@ -422,53 +327,7 @@ body {
 }
 
 /* =========== Admin Dashboard =============== */
-#admin-dashboard {
-  width: 90%;
-  overflow: scroll;
-  margin: 4rem 2rem 0 2rem;
-  background-color: var(--black1);
-  padding: 20px;
-  border-radius: 20px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  color: var(--white);
-}
 
-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-th,
-td {
-  padding: 10px;
-  border: 1px solid #ddd;
-  text-align: center;
-}
-
-th {
-  background-color: var(--black1);
-}
-
-button {
-  padding: 5px 10px;
-  background-color: var(--logo-color);
-  color: #fff;
-  border: none;
-  border-radius: 3px;
-  cursor: pointer;
-}
-
-.edit-button:hover {
-  background: #207429;
-}
-
-.delete-button {
-  background: red;
-}
-
-.delete-button:hover {
-  background: #bd0e1f;
-}
 
 /* ======================== Popup style ======================= */
 #popup,
@@ -589,5 +448,196 @@ button {
   table,
   a {
     font-size: small;
+  }
+}
+
+
+/* ========== ANNOUNCEMENT MANAGER ========== */
+.admin-section {
+  background: #fff;
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 2rem;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 100%;
+}
+
+/* Headings */
+.admin-section h2,
+.admin-section h3 {
+  color: var(--pry-color);
+  text-align: left;
+  margin-bottom: 1rem;
+}
+
+/* ===== FORM STYLES ===== */
+.announcement-form {
+  display: grid;
+  gap: 1rem;
+  background: #f9f9f9;
+  padding: 20px;
+  border-radius: 10px;
+  width: 100%;
+  max-width: 100%;
+}
+
+.form-group label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  outline: none;
+  background: #fff;
+  color: #000;
+  font-size: 14px;
+  transition: border-color 0.3s ease;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--pry-color);
+}
+
+.submit-btn {
+  background: var(--pry-color);
+  border: none;
+  padding: 12px 15px;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 15px;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+.submit-btn:hover {
+  background: var(--pry-hover);
+  transform: scale(1.02);
+}
+
+/* ===== TABLE STYLES ===== */
+.table-container {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto;
+  margin-top: 2rem;
+  box-sizing: border-box;
+  border-radius: 10px;
+}
+
+.announcement-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 600px;
+  border: 1px solid #e0e0e0;
+}
+
+.announcement-table th,
+.announcement-table td {
+  padding: 12px 15px;
+  text-align: left;
+  color: #222;
+  border-bottom: 1px solid #eaeaea;
+  font-size: 14px;
+}
+
+.announcement-table th {
+  background: #554606ea;
+  color: #fff;
+  font-weight: 600;
+}
+
+.announcement-table tr:nth-child(even) {
+  background: #f9f9f9;
+}
+
+.announcement-table tr:hover {
+  background: #f1f1f1;
+  transition: 0.3s ease;
+}
+
+/* Buttons inside table */
+.announcement-table td:last-child {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.announcement-table button {
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  transition: 0.3s ease;
+  flex-shrink: 0; /* keeps buttons from shrinking on narrow screens */
+}
+
+.edit-ann {
+  background-color: #2d9bf0;
+  color: #fff;
+}
+
+.edit-ann:hover {
+  background-color: #1a76c2;
+}
+
+.delete-ann {
+  background-color: #d32f2f;
+  color: #fff;
+  margin-left: 5px;
+}
+
+.delete-ann:hover {
+  background-color: #b71c1c;
+}
+
+/* ===== DIVIDER ===== */
+.divider {
+  margin: 2rem 0;
+  border: 0;
+  height: 1px;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+/* ===== RESPONSIVENESS ===== */
+@media (max-width: 768px) {
+  .admin-section {
+    padding: 15px;
+  }
+
+  .announcement-form {
+    padding: 15px;
+  }
+
+  .announcement-table th,
+  .announcement-table td {
+    padding: 10px;
+    font-size: 13px;
+  }
+
+  .submit-btn {
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .announcement-table {
+    min-width: 450px;
+  }
+
+  .form-group input,
+  .form-group textarea {
+    font-size: 13px;
   }
 }

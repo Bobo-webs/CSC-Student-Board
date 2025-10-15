@@ -1,9 +1,9 @@
+// ====================== IMPORTS ======================
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
 import {
   getAuth,
   onAuthStateChanged,
   signOut,
-  deleteUser,
 } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js";
 import {
   getDatabase,
@@ -13,43 +13,55 @@ import {
   onValue,
   update,
   remove,
+  push,
+  set,
 } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-database.js";
-import {
-  getFunctions,
-  httpsCallable,
-} from "https://www.gstatic.com/firebasejs/10.12.1/firebase-functions.js";
-import { getMessaging } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-messaging.js";
 
+// ====================== FIREBASE CONFIG ======================
 const firebaseConfig = {
-  apiKey: "AIzaSyBr41oUYa1OarPVkA7oTZ5U80yeDmLuewY",
-  authDomain: "robinhood-fx.firebaseapp.com",
-  projectId: "robinhood-fx",
-  storageBucket: "robinhood-fx.appspot.com",
-  messagingSenderId: "274862764153",
-  appId: "1:274862764153:web:7f0796a69966dc779fa4a8",
-  measurementId: "G-KNHNN8YDXY",
-  databaseURL: "https://robinhood-fx-default-rtdb.firebaseio.com",
+  apiKey: "AIzaSyCUEnagBuBhDISPJDSRhw-kx-227TaUIEA",
+  authDomain: "cit306-group20.firebaseapp.com",
+  databaseURL: "https://cit306-group20-default-rtdb.firebaseio.com",
+  projectId: "cit306-group20",
+  storageBucket: "cit306-group20.firebasestorage.app",
+  messagingSenderId: "511217693205",
+  appId: "1:511217693205:web:007c053b3f52128b3a941c",
+  measurementId: "G-YJNXERNJNB",
 };
 
+// ====================== INITIALIZE ======================
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const database = getDatabase(app);
-const messaging = getMessaging(app);
-const functions = getFunctions(app);
 
-// DOM elements
+// ====================== DOM ELEMENTS ======================
 const logoutButton = document.getElementById("logoutButton");
 const confirmYes = document.getElementById("confirmYes");
 const confirmNo = document.getElementById("confirmNo");
 const confirmationPopup = document.getElementById("confirmationPopup");
-const loadingScreen = document.getElementById("loading-screen");
+const loadingScreen = document.getElementById("loading-overlay");
 const dashboardContent = document.getElementById("dashboard-content");
 
-// Event listener for DOM content loaded
+// ====================== LOADING HANDLER ======================
+function showLoadingScreen() {
+  loadingScreen.style.display = "flex";
+  setTimeout(() => (loadingScreen.style.opacity = "1"), 10);
+  dashboardContent.style.display = "none";
+}
+
+function hideLoadingScreen() {
+  loadingScreen.style.opacity = "0";
+  setTimeout(() => {
+    loadingScreen.style.display = "none";
+    dashboardContent.style.display = "block";
+  }, 500);
+}
+
+// ====================== AUTH STATE ======================
 document.addEventListener("DOMContentLoaded", () => {
+  showLoadingScreen();
   onAuthStateChanged(auth, (user) => {
     if (user) {
-      showLoadingScreen();
       checkUserRole(user.uid);
     } else {
       redirectToLogin();
@@ -57,31 +69,18 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-// Show loading screen and hide dashboard content
-function showLoadingScreen() {
-  loadingScreen.style.display = "block";
-  dashboardContent.style.display = "none";
-}
-
-// Hide loading screen and show dashboard content
-function hideLoadingScreen() {
-  loadingScreen.style.display = "none";
-  dashboardContent.style.display = "block";
-}
-
-// Redirect to login page
 function redirectToLogin() {
   window.location.href = "login.html";
 }
 
-// Check user's role
+// ====================== ROLE VALIDATION ======================
 function checkUserRole(uid) {
   const dbRef = ref(database);
   get(child(dbRef, `users/${uid}/role`))
     .then((snapshot) => {
       if (snapshot.exists() && snapshot.val().includes("admin")) {
         hideLoadingScreen();
-        fetchUsers(uid); // Fetch and display users
+        fetchAnnouncements(uid); // Load admin announcements
       } else {
         console.warn("User is not an admin. Redirecting to login.");
         redirectToLogin();
@@ -93,151 +92,170 @@ function checkUserRole(uid) {
     });
 }
 
-// Fetch and display users, excluding admins and users with owner: dwayne
-function fetchUsers(currentAdminUid) {
-  const usersList = document.getElementById("users-list");
-  const usersRef = ref(database, "users");
-  onValue(usersRef, (snapshot) => {
-    usersList.innerHTML = ""; // Clear the list before adding new users
-    snapshot.forEach((childSnapshot) => {
-      const user = childSnapshot.val();
-      const uid = childSnapshot.key;
+// ====================== ANNOUNCEMENT MANAGEMENT ======================
+const announcementForm = document.getElementById("announcementForm");
+const titleInput = document.getElementById("announcementTitle");
+const dateInput = document.getElementById("announcementDate");
+const categoryInput = document.getElementById("announcementCategory");
+const contentInput = document.getElementById("announcementContent");
+const announcementsTable = document.getElementById("announcementsTableBody");
 
-      // Check if the user is an admin or has owner: dwayne
-      if (
-        (user.role && user.role.includes("admin") && uid === currentAdminUid) ||
-        (user.owner && user.owner === "dwayne")
-      ) {
-        return; // Skip adding current admin and users with owner: dwayne to the dashboard
-      }
-
-      const row = document.createElement("tr");
-      row.innerHTML = `
-                <td>${user.lastname}</td>
-                <td>${user.email}</td>
-                <td>
-                    $${user.balance}<br>
-                    <button class="edit-balance" data-uid="${uid}">Edit</button>
-                </td>
-                <td>
-                    $${user.investments}<br>
-                    <button class="edit-investments" data-uid="${uid}">Edit</button>
-                </td>
-                <td>
-                    $${user.deposits}<br>
-                    <button class="edit-deposits" data-uid="${uid}">Edit</button>
-                </td>
-                <td>
-                    $${user.referrals}<br>
-                    <button class="edit-referrals" data-uid="${uid}">Edit</button>
-                </td>
-                <td>
-                    <button class="delete-button" data-uid="${uid}">Delete</button>
-                </td>
-            `;
-      usersList.appendChild(row);
-    });
-
-    // Add event listeners for edit buttons
-    document.querySelectorAll(".edit-balance").forEach((button) => {
-      button.addEventListener("click", () => {
-        const uid = button.getAttribute("data-uid");
-        editField(uid, "balance");
+// Fetch announcements
+function fetchAnnouncements(adminUid) {
+  const announcementsRef = ref(database, `announcements/${adminUid}`);
+  onValue(announcementsRef, (snapshot) => {
+    announcementsTable.innerHTML = "";
+    if (snapshot.exists()) {
+      snapshot.forEach((child) => {
+        const data = child.val();
+        const row = document.createElement("tr");
+        row.innerHTML = `
+          <td>${data.title || "N/A"}</td>
+          <td>${data.date || "N/A"}</td>
+          <td>${data.category || "N/A"}</td>
+          <td>${data.content || "N/A"}</td>
+          <td>${new Date(data.timestamp).toLocaleString()}</td>
+          <td>
+            <button class="edit-ann" data-id="${child.key}">Edit</button>
+            <button class="delete-ann" data-id="${child.key}">Delete</button>
+          </td>
+        `;
+        announcementsTable.appendChild(row);
       });
-    });
 
-    document.querySelectorAll(".edit-investments").forEach((button) => {
-      button.addEventListener("click", () => {
-        const uid = button.getAttribute("data-uid");
-        editField(uid, "investments");
-      });
-    });
+      document
+        .querySelectorAll(".edit-ann")
+        .forEach((btn) =>
+          btn.addEventListener("click", () =>
+            editAnnouncement(adminUid, btn.dataset.id)
+          )
+        );
 
-    document.querySelectorAll(".edit-deposits").forEach((button) => {
-      button.addEventListener("click", () => {
-        const uid = button.getAttribute("data-uid");
-        editField(uid, "deposits");
-      });
-    });
-
-    document.querySelectorAll(".edit-referrals").forEach((button) => {
-      button.addEventListener("click", () => {
-        const uid = button.getAttribute("data-uid");
-        editField(uid, "referrals");
-      });
-    });
-
-    document.querySelectorAll(".edit-withdrawals").forEach((button) => {
-      button.addEventListener("click", () => {
-        const uid = button.getAttribute("data-uid");
-        editField(uid, "withdrawals");
-      });
-    });
-
-    document.querySelectorAll(".delete-button").forEach((button) => {
-      button.addEventListener("click", () => {
-        const uid = button.getAttribute("data-uid");
-        deleteUserDataAndAccount(uid);
-      });
-    });
-  });
-
-  // Add event listener for search input
-  const searchInput = document.getElementById("searchInput");
-  searchInput.addEventListener("input", () => {
-    const searchText = searchInput.value.toLowerCase();
-    const rows = usersList.getElementsByTagName("tr");
-    Array.from(rows).forEach((row) => {
-      const name = row.getElementsByTagName("td")[0].textContent.toLowerCase();
-      if (name.includes(searchText)) {
-        row.style.display = "";
-      } else {
-        row.style.display = "none";
-      }
-    });
+      document
+        .querySelectorAll(".delete-ann")
+        .forEach((btn) =>
+          btn.addEventListener("click", () =>
+            deleteAnnouncement(adminUid, btn.dataset.id)
+          )
+        );
+    } else {
+      announcementsTable.innerHTML = `
+        <tr><td colspan="6" style="text-align:center;">No announcements yet.</td></tr>`;
+    }
   });
 }
 
-// Edit specific user field
-function editField(uid, field) {
-  const newValue = prompt(`Enter new ${field}:`);
+// Add announcement
+announcementForm.addEventListener("submit", (e) => {
+  e.preventDefault();
+  const user = auth.currentUser;
+  if (!user) return alert("No admin authenticated!");
 
-  if (newValue) {
-    const userRef = ref(database, "users/" + uid);
-    const updates = {};
-    updates[field] = newValue;
-    update(userRef, updates).catch((error) => {
-      console.error(`Error updating ${field}:`, error);
-    });
+  const title = titleInput.value.trim();
+  const date = dateInput.value.trim();
+  const category = categoryInput.value.trim();
+  const content = contentInput.value.trim();
+  const timestamp = Date.now();
+
+  if (!title || !date || !category || !content) {
+    alert("Please fill all fields.");
+    return;
   }
-}
 
-// Delete user data and account
-function deleteUserDataAndAccount(uid) {
-  if (confirm("Are you sure you want to delete this user?")) {
-    // Remove user data from the database
-    const userRef = ref(database, "users/" + uid);
-    remove(userRef)
-      .then(() => {
-        console.log("User data successfully deleted from database.");
+  const announcementsRef = ref(database, `announcements/${user.uid}`);
+  const newRef = push(announcementsRef);
 
-        // Call the cloud function to delete user account
-        const deleteUserFunction = httpsCallable(functions, "deleteUser");
-        deleteUserFunction({ uid: uid })
+  set(newRef, { title, date, category, content, timestamp })
+    .then(() => {
+      announcementForm.reset();
+      alert("✅ Announcement added successfully!");
+    })
+    .catch((error) => {
+      console.error("Error adding announcement:", error);
+      alert("❌ Failed to add announcement.");
+    });
+});
+
+// Edit announcement
+function editAnnouncement(adminUid, id) {
+  const annRef = ref(database, `announcements/${adminUid}/${id}`);
+  get(annRef).then((snapshot) => {
+    if (snapshot.exists()) {
+      const data = snapshot.val();
+      titleInput.value = data.title;
+      dateInput.value = data.date;
+      categoryInput.value = data.category;
+      contentInput.value = data.content;
+      announcementForm.querySelector(".submit-btn").textContent =
+        "Update Announcement";
+
+      announcementForm.onsubmit = (e) => {
+        e.preventDefault();
+        update(annRef, {
+          title: titleInput.value.trim(),
+          date: dateInput.value.trim(),
+          category: categoryInput.value.trim(),
+          content: contentInput.value.trim(),
+        })
           .then(() => {
-            console.log("User account successfully deleted.");
+            announcementForm.reset();
+            announcementForm.querySelector(".submit-btn").textContent =
+              "Add Announcement";
+            announcementForm.onsubmit = defaultAnnouncementSubmit;
+            alert("✅ Announcement updated!");
           })
           .catch((error) => {
-            console.error("Error deleting user account:", error);
+            console.error("Error updating announcement:", error);
+            alert("❌ Failed to update announcement.");
           });
-      })
+      };
+    }
+  });
+}
+
+// Delete announcement
+function deleteAnnouncement(adminUid, id) {
+  if (confirm("Delete this announcement?")) {
+    remove(ref(database, `announcements/${adminUid}/${id}`))
+      .then(() => alert("🗑️ Announcement deleted."))
       .catch((error) => {
-        console.error("Error deleting user data from database:", error);
+        console.error("Error deleting announcement:", error);
+        alert("❌ Failed to delete announcement.");
       });
   }
 }
 
-// Handle logout
+// Default add handler (after editing)
+function defaultAnnouncementSubmit(e) {
+  e.preventDefault();
+  const user = auth.currentUser;
+  if (!user) return alert("No admin authenticated!");
+
+  const title = titleInput.value.trim();
+  const date = dateInput.value.trim();
+  const category = categoryInput.value.trim();
+  const content = contentInput.value.trim();
+  const timestamp = Date.now();
+
+  if (!title || !date || !category || !content) {
+    alert("Please fill all fields.");
+    return;
+  }
+
+  const announcementsRef = ref(database, `announcements/${user.uid}`);
+  const newRef = push(announcementsRef);
+
+  set(newRef, { title, date, category, content, timestamp })
+    .then(() => {
+      announcementForm.reset();
+      alert("✅ Announcement added successfully!");
+    })
+    .catch((error) => {
+      console.error("Error adding announcement:", error);
+    });
+}
+
+// ====================== LOGOUT ======================
 logoutButton.addEventListener("click", () => {
   confirmationPopup.style.display = "block";
 });
@@ -256,20 +274,3 @@ confirmYes.addEventListener("click", () => {
 confirmNo.addEventListener("click", () => {
   confirmationPopup.style.display = "none";
 });
-
-// Display user data
-function displayUserData(uid) {
-  const dbRef = ref(database);
-  get(child(dbRef, `users/${uid}`))
-    .then((snapshot) => {
-      if (snapshot.exists()) {
-        const userData = snapshot.val();
-        console.log(userData); // Handle and display user data on your dashboard
-      } else {
-        console.warn("No user data available");
-      }
-    })
-    .catch((error) => {
-      console.error("Error retrieving user data:", error);
-    });
-}

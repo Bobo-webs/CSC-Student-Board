@@ -18,7 +18,7 @@ const firebaseConfig = {
   storageBucket: "cit306-group20.firebasestorage.app",
   messagingSenderId: "511217693205",
   appId: "1:511217693205:web:007c053b3f52128b3a941c",
-  measurementId: "G-YJNXERNJNB"
+  measurementId: "G-YJNXERNJNB",
 };
 
 // Initialize Firebase
@@ -38,6 +38,15 @@ const popup = document.getElementById("popup");
 const errorPopup = document.getElementById("error-popup");
 const popupMessage = document.getElementById("popup-message");
 const errorMessage = document.getElementById("error-message");
+
+// Loading Overlay functions
+const showLoading = () => {
+  document.getElementById("loading-overlay").classList.add("show");
+};
+
+const hideLoading = () => {
+  document.getElementById("loading-overlay").classList.remove("show");
+};
 
 // Form validation
 const setError = (element, message) => {
@@ -82,7 +91,7 @@ const validateInputs = async () => {
   } else if (!isValidUsername(firstnameValue)) {
     setError(
       firstname,
-      "3-16 chars, begin with a letter. Contain: letters, numbers underscores and periods."
+      "3-16 chars, begin with a letter. Contain: letters, numbers, underscores, and periods."
     );
     isValid = false;
   } else {
@@ -129,15 +138,6 @@ const validateInputs = async () => {
   return isValid;
 };
 
-// Add event listener to form submit
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const isValid = await validateInputs();
-  if (isValid) {
-    // Proceed with form submission
-  }
-});
-
 // Popup functions
 const showPopup = (message) => {
   popupMessage.textContent = message;
@@ -156,23 +156,20 @@ const closePopup = () => {
   }
 };
 
-// Attach the closePopup function to the close button
 document.querySelector(".close").addEventListener("click", closePopup);
 
-// Danger Popup functions
 const showDangerPopup = (message) => {
   const dangerMessage = document.getElementById("danger-message");
   dangerMessage.textContent = message;
   const dangerPopup = document.getElementById("danger-popup");
   dangerPopup.classList.add("show");
 
-  // Auto-hide the popup after 5 seconds
   setTimeout(() => {
     dangerPopup.classList.remove("show");
   }, 10000);
 };
 
-// Modify the existing submit event listener to show the danger popup
+// Main Submit Logic with Loading Integration
 submit.addEventListener("click", async (event) => {
   event.preventDefault();
 
@@ -181,6 +178,8 @@ submit.addEventListener("click", async (event) => {
     const firstnameValue = firstname.value.trim();
     const lastnameValue = lastname.value.trim();
     const passwordValue = password.value.trim();
+
+    showLoading(); // Show loading before Firebase call
 
     createUserWithEmailAndPassword(auth, emailValue, passwordValue)
       .then((userCredential) => {
@@ -198,17 +197,20 @@ submit.addEventListener("click", async (event) => {
           referrals: 0,
         })
           .then(() => {
+            hideLoading(); // Hide loading after success
             showPopup("Account Created Successfully.");
             setTimeout(() => {
               window.location.href = "login.html";
             }, 5000);
           })
           .catch((error) => {
+            hideLoading();
             console.error("Error writing user data:", error);
             showError("Error writing user data.");
           });
       })
       .catch((error) => {
+        hideLoading();
         if (error.code === "auth/email-already-in-use") {
           showDangerPopup("This email has already been taken.");
         } else {

@@ -8,7 +8,7 @@
     <title>Admin Dashboard</title>
 
     <!-- ======= Styles ====== -->
-    <link rel="icon" href="./assets/images/logo-icon.jpg">
+    <link rel="icon" href="/assets/img/logo.png">
     <link rel="stylesheet" href="./assets/css/admin.css" />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
         integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
@@ -27,7 +27,12 @@
     <div id="progress-bar-container">
         <div id="progress-bar"></div>
     </div>
-    <div id="loading-screen" class="loading">Loading...</div>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay">
+        <div class="loader"></div>
+    </div>
+
 
     <!-- =============== Navigation ================ -->
     <div class="container" id="dashboard-content" style="display: none;">
@@ -36,10 +41,10 @@
                 <li>
                     <a href="index.html">
                         <span class="icon">
-                            <img src="./assets/images/logo.png" alt="">
+                            <img src="./assets/img/logo.png" alt="">
                         </span>
                         <span class="title brand">
-                            <h3>Robinhood<span style="color: limegreen;">Fx</span></h3>
+                            <h3>Student Board</h3>
                         </span>
                     </a>
                 </li>
@@ -85,45 +90,64 @@
 
             <!-- ======================= Admin dashboard ================== -->
             <h1 style="color: #fff;">ADMIN DASHBOARD</h1>
-            <div id="admin-dashboard">
-                <table id="users-table">
-                    <thead>
-                        <tr>
-                            <th>User's Name</th>
-                            <th>Email</th>
-                            <th>Balance</th>
-                            <th>Investments</th>
-                            <th>Deposists</th>
-                            <th>Referrals</th>
-                            <th style="color: red;">Delete</th>
-                        </tr>
-                    </thead>
-                    <tbody id="users-list">
-                        <!-- User rows will be populated here -->
-                    </tbody>
-                </table>
-            </div>
-            <!-- 
-            <div id="admin-dashboard">
-                <h2>Transactions Data</h2>
-                <table id="users-table">
-                    <thead>
-                        <tr>
-                            <th>Full Name</th>
-                            <th>Email</th>
-                            <th>Type</th>
-                            <th>Price</th>
-                            <th>Date</th>
-                            <th>Status</th>
-                            <th style="color: red;">Delete</th>
-                        </tr>
-                    </thead>
-                    <tbody id="users-list">
-                        User rows will be populated here
-                    </tbody>
-                </table>
-            </div>
-            -->
+            <!-- ================== ANNOUNCEMENT MANAGEMENT ================== -->
+            <section id="announcementManager" class="admin-section">
+                <h2>📢 Manage Announcements</h2>
+
+                <!-- Announcement Form -->
+                <form id="announcementForm" class="announcement-form">
+                    <div class="form-group">
+                        <label for="announcementTitle">Title</label>
+                        <input type="text" id="announcementTitle" placeholder="Enter announcement title" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="announcementDate">Date</label>
+                        <input type="date" id="announcementDate" required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="announcementCategory">Category</label>
+                        <input type="text" id="announcementCategory" placeholder="e.g. Academic, Events, Admin..."
+                            required />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="announcementContent">Content</label>
+                        <textarea id="announcementContent" rows="3" placeholder="Type announcement details..."
+                            required></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">Add Announcement</button>
+                </form>
+
+
+                <!-- Divider -->
+                <hr class="divider" />
+
+                <!-- Announcement List -->
+                <h3>📰 Existing Announcements</h3>
+                <div class="table-container">
+                    <table class="announcement-table">
+                        <thead>
+                            <tr>
+                                <th>Title</th>
+                                <th>Date</th>
+                                <th>Category</th>
+                                <th>Content</th>
+                                <th>Time Uploaded</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="announcementsTableBody">
+                            <!-- Dynamic data loaded from Firebase -->
+                        </tbody>
+                    </table>
+                </div>
+
+            </section>
+
+
 
 
             <!-- ========================== Popups ====================== -->

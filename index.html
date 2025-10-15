@@ -1,378 +1,264 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
-      rel="stylesheet"
-    />
 
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="assets/css/general.css" />
-    <link rel="stylesheet" href="assets/css/style.css" />
-    <link rel="stylesheet" href="assets/css/query.css" />
-    <script src="assets/js/fxn.js"></script>
-    <link
-      rel="icon"
-      href="assets/img/logo.png"
-    />
-    <meta property="og:title" content="Student Information Board - FUTO" />
-    <meta
-      property="og:description"
-      content="Stay updated with the latest departmental activities, projects, and resources from FUTO's Department of Computer Science."
-    />
-    <title>Student Information Board</title>
-    <script
-      type="module"
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"
-    ></script>
-    <script
-      nomodule
-      src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"
-    ></script>
-  </head>
-  <body>
-    <div>
-      <header>
-        <div class="top-admin top-hero">
-          <nav class="nav-grid" id="nav-links">
-            <ul class="admin-nav">
-              <li><a href="index.html">Home</a></li>
-              <li><a href="#announcements">Announcement</a></li>
-              <li><a href="#events">Events</a></li>
-              <li><a href="#archive">Archive</a></li>
-              <li><a href="register.html">Admin</a></li>
-            </ul>
-            <div class="department">
-              <figure>
-                <img
-                  src="assets/img/logo.png"
-                  alt="Futo logo"
-                  class="futo-logo"
-                />
-              </figure>
-              <div>
-                <p class="Topic">Dept. of Computer Science — Student Board</p>
-                <p class="sub-topic">
-                  Official notices • Events • Timetables • Results
-                </p>
-              </div>
-            </div>
-            <!-- Hamburger Icon -->
-            <button class="menu-toggle" type="button" aria-label="Toggle menu">
-              <ion-icon name="menu-outline"></ion-icon>
-            </button>
-          </nav>
-        </div>
-      </header>
-    </div>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+    rel="stylesheet" />
 
-    <main>
-      <div class="home-hero">
-        <div class="title-con">
-          <h1 class="h1 home-h1">
-            Connecting Students to Knowledge and Opportunity
-          </h1>
-          <p class="home-p1">
-            Stay updated with the latest departmental activities, projects, and
-            resources that shape your academic journey.
-          </p>
-        </div>
-      </div>
-      <section id="announcements" class="container con-gap">
-        <div>
-          <h2 class="secondary-h2">Latest Announcements</h2>
-          <div class="grid grid-tempt-col-3">
-            <div class="Latest">
-              <p><strong>Hackathon week registration</strong></p>
-              <span>Nov 1, 2025 • Events</span>
-              <p>Register your team of up to 4 members.</p>
-            </div>
-            <div class="Latest">
-              <p><strong>Registration deadline extended</strong></p>
-              <span>Oct 21, 2025 • Administration</span>
-              <p>For Affected students.</p>
-            </div>
-            <div class="Latest">
-              <p><strong>Departmental Seminar: AI Ethics</strong></p>
-              <span>Oct 20, 2025 • Events</span>
-              <p>Speaker: Prof. Ada Eze. Time: 12:00PM.</p>
-            </div>
-            <div class="Latest">
-              <p><strong>Project Submission starts Sat 10am</strong></p>
-              <span>Oct 18, 2025 • Academic</span>
-              <p>Venue: Lab 2. Bring laptops.</p>
-            </div>
-            <div class="Latest">
-              <p><strong>CIT306 Project Submission starts Sat 10am</strong></p>
-              <span>Oct 18, 2025 • Academic</span>
-              <p>Venue: Lab 2. Bring laptops.</p>
-            </div>
-            <div class="Latest">
-              <p><strong>CIT306 Project Submission starts Sat 10am</strong></p>
-              <span>Oct 18, 2025 • Academic</span>
-              <p>Venue: Lab 2. Bring laptops.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-      <section id="events" class="events">
-        <div class="container con-gap">
-          <div>
-            <h2 class="secondary-h2">Upcoming Events</h2>
-            <div class="grid grid-tempt-col-3 margin-bot">
-              <div class="event-card">
-                <a href="#">
-                  <figure>
-                    <img
-                      src="assets/img/web.jpeg"
-                      alt="Web design flyer"
-                      class="event-img"
-                    />
-                  </figure>
-                  <p>
-                    Join us for an exciting workshop where industry experts and
-                    professionals...
-                  </p>
-                  <span class="span">
-                    <ion-icon
-                      name="calendar-number-outline"
-                      class="event-icon"
-                    ></ion-icon
-                    >November 4th, 2025
-                  </span>
-                  <span class="span"
-                    ><ion-icon name="time-outline" class="event-icon"></ion-icon
-                    >2:00:00 PM</span
-                  >
-                </a>
-              </div>
-              <div class="event-card">
-                <a href="#">
-                  <figure>
-                    <img
-                      src="assets/img/research.jpeg"
-                      alt="Web Research flyer"
-                      class="event-img"
-                    />
-                  </figure>
-                  <p>
-                    Boost your research communication skills! FUTO announces the
-                    second cohort...
-                  </p>
-                  <span class="span">
-                    <ion-icon
-                      name="calendar-number-outline"
-                      class="event-icon"
-                    ></ion-icon
-                    >October 11th, 2025</span
-                  >
-                  <span class="span">
-                    <ion-icon name="time-outline" class="event-icon"></ion-icon
-                    >11:00:00 AM</span
-                  >
-                </a>
-              </div>
-              <div class="event-card">
-                <a href="#">
-                  <figure>
-                    <img
-                      src="assets/img/alumni.jpeg"
-                      alt="Alumni design flyer"
-                      class="event-img"
-                    />
-                  </figure>
-                  <p>
-                    Join us for an inspiring conversation as you hear firsthand
-                    about...
-                  </p>
-                  <span class="span">
-                    <ion-icon
-                      name="calendar-number-outline"
-                      class="event-icon"
-                    ></ion-icon>
-                    December 20th, 2025</span
-                  >
-                  <span class="span">
-                    <ion-icon name="time-outline" class="event-icon"></ion-icon
-                    >10:00:00 AM</span
-                  >
-                </a>
-              </div>
-              <div class="event-card pics">
-                <a href="#">
-                  <figure>
-                    <img
-                      src="assets/img/corhort.jpeg"
-                      alt="Workshop design flyer"
-                      class="event-img"
-                    />
-                  </figure>
-                  <p>
-                    The Federal University of Technology Owerri (FUTO), in a
-                    significant move...
-                  </p>
-                  <span class="span">
-                    <ion-icon
-                      name="calendar-number-outline"
-                      class="event-icon"
-                    ></ion-icon
-                    >December 9th, 2025</span
-                  >
-                </a>
-              </div>
-              <div class="event-card">
-                <a href="#">
-                  <figure>
-                    <img
-                      src="assets/img/post.jpg"
-                      alt="Postutme design flyer"
-                      class="event-img"
-                    />
-                  </figure>
-                  <p>
-                    The Postgraduate School of the Federal University of
-                    Technology...
-                  </p>
-                  <span class="span">
-                    <ion-icon
-                      name="calendar-number-outline"
-                      class="event-icon"
-                    ></ion-icon
-                    >November 9th, 2025</span
-                  >
-                </a>
-              </div>
-              <div class="event-card">
-                <a href="#">
-                  <figure>
-                    <img
-                      src="assets/img/logo.png"
-                      alt="NACOS design flyer"
-                      class="event-img"
-                    />
-                  </figure>
-                  <p>
-                    ADVERTISEMENT FOR 2025/2026 FUTO POST-UTME SCREENING
-                    EXERCISE FOR SUPPLEMENTARY ADDMISSION
-                  </p>
-                  <span class="span">
-                    <ion-icon
-                      name="calendar-number-outline"
-                      class="event-icon"
-                    ></ion-icon
-                    >December 9th, 2025</span
-                  >
-                </a>
-              </div>
-            </div>
-            <a href="#" class="event-link">See More</a>
-          </div>
-        </div>
-      </section>
-      <section id="archive" class="container con-gap">
-        <h2 class="secondary-h2">Archive</h2>
-        <table class="styled-table">
-          <thead>
-            <tr>
-              <th>Title</th>
-              <th>Date</th>
-              <th>Category</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Annual NACOS General Meeting</td>
-              <td>Sept 2, 2025</td>
-              <td>Association</td>
-            </tr>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/general.css" />
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <link rel="stylesheet" href="assets/css/query.css" />
+  <script src="assets/js/fxn.js"></script>
+  <link rel="icon" href="assets/img/logo.png" />
+  <meta property="og:title" content="Student Information Board - FUTO" />
+  <meta property="og:description"
+    content="Stay updated with the latest departmental activities, projects, and resources from FUTO's Department of Computer Science." />
+  <title>Student Information Board</title>
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
 
-            <tr>
-              <td>FUTO Coding Challenge 2.0</td>
-              <td>Oct 1, 2025</td>
-              <td>Event</td>
-            </tr>
-            <tr>
-              <td>Departmental Cleanup & Maintenance Day</td>
-              <td>Oct 4, 2025</td>
-              <td>Community Service</td>
-            </tr>
-            <tr>
-              <td>FUTO Alumni Tech Talk</td>
-              <td>Sept 18, 2025</td>
-              <td>Events</td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-    </main>
-    <footer>
-      <div class="footer">
-        <div class="footer-top">
+  <!-- ======== Script ======= -->
+  <script type="module" src="./assets/js/app.js"></script>
+
+</head>
+
+<body>
+  <div>
+    <header>
+      <div class="top-admin top-hero">
+        <nav class="nav-grid" id="nav-links">
+          <ul class="admin-nav">
+            <li><a href="index.html">Home</a></li>
+            <li><a href="#announcements">Announcement</a></li>
+            <li><a href="#events">Events</a></li>
+            <li><a href="#archive">Archive</a></li>
+            <li><a href="register.html">Admin</a></li>
+          </ul>
           <div class="department">
             <figure>
-              <img
-                src="assets/img/logo.png"
-                alt="Futo logo"
-                class="futo-logo"
-              />
+              <img src="assets/img/logo.png" alt="Futo logo" class="futo-logo" />
             </figure>
-
-            <p class="fed">Dept. of Computer Science</p>
+            <div>
+              <p class="Topic">Dept. of Computer Science — Student Board</p>
+              <p class="sub-topic">
+                Official notices • Events • Timetables • Results
+              </p>
+            </div>
           </div>
-
-          <div class="icon-box">
-            <ion-icon name="mail-outline" class="icon"></ion-icon>
-            <a href="mailto:info@futo.edu.ng"> info@futo.edu.ng</a>
-          </div>
-          <div class="icon-box">
-            <ion-icon name="call-outline" class="icon"></ion-icon>
-            <a href="tel:+2348067153799"> +2348067153799</a>
-          </div>
-          <div class="icon-box">
-            <ion-icon name="home-outline" class="icon"></ion-icon>
-            <address>1526, PMB, Owerri, Ihiagwa</address>
-          </div>
-        </div>
-        <div class="footer-gap">
-          <a href="#announcements">Announcement</a>
-          <a href="#events">Events</a>
-          <a href="#archive">Archive</a>
-          <a href="register.html">Admin</a>
-          <a href="#">Results Portal</a>
-          <a href="#" class="footer-link">Course Timetable</a>
-        </div>
-        <div class="footer-gap">
-          <a href="#">News</a>
-          <a href="#">Research</a>
-          <a href="#">Academics</a>
-          <a href="#">Academic Calender</a>
-          <a href="#">Location/Map </a>
-          <a href="#">Admission</a>
-        </div>
-        <div class="footer-gap">
-          <a href="#">IEEE</a>
-          <a href="#">NCC</a>
-          <a href="#">NUC</a>
-          <a href="#">TETFUND</a>
-          <a href="#">CISCO LMS</a>
-          <a href="#" class="footer-link">FUTO Weather Repository</a>
-        </div>
+          <!-- Hamburger Icon -->
+          <button class="menu-toggle" type="button" aria-label="Toggle menu">
+            <ion-icon name="menu-outline"></ion-icon>
+          </button>
+        </nav>
       </div>
-      <div class="footer-lst">
-        <p>
-          &copy 2025 All Rights Reserved. Federal University of Technology
-          Owerri
+    </header>
+  </div>
+
+  <main>
+    <div class="home-hero">
+      <div class="title-con">
+        <h1 class="h1 home-h1">
+          Connecting Students to Knowledge and Opportunity
+        </h1>
+        <p class="home-p1">
+          Stay updated with the latest departmental activities, projects, and
+          resources that shape your academic journey.
         </p>
       </div>
-    </footer>
-  </body>
+    </div>
+
+    <!-- --------------- Announcements ----------------- -->
+    <section id="announcements" class="container con-gap">
+      <div>
+        <h2 class="secondary-h2">Latest Announcements</h2>
+        <div class="grid grid-tempt-col-3">
+          <!-- Announcements will load here dynamically -->
+        </div>
+      </div>
+    </section>
+
+
+    <section id="events" class="events">
+      <div class="container con-gap">
+        <div>
+          <h2 class="secondary-h2">Upcoming Events</h2>
+          <div class="grid grid-tempt-col-3 margin-bot">
+            <div class="event-card">
+              <a href="#">
+                <figure>
+                  <img src="assets/img/web.jpeg" alt="Web design flyer" class="event-img" />
+                </figure>
+                <p>
+                  Join us for an exciting workshop where industry experts and
+                  professionals...
+                </p>
+                <span class="span">
+                  <ion-icon name="calendar-number-outline" class="event-icon"></ion-icon>November 4th, 2025
+                </span>
+                <span class="span"><ion-icon name="time-outline" class="event-icon"></ion-icon>2:00:00 PM</span>
+              </a>
+            </div>
+            <div class="event-card">
+              <a href="#">
+                <figure>
+                  <img src="assets/img/research.jpeg" alt="Web Research flyer" class="event-img" />
+                </figure>
+                <p>
+                  Boost your research communication skills! FUTO announces the
+                  second cohort...
+                </p>
+                <span class="span">
+                  <ion-icon name="calendar-number-outline" class="event-icon"></ion-icon>October 11th, 2025</span>
+                <span class="span">
+                  <ion-icon name="time-outline" class="event-icon"></ion-icon>11:00:00 AM</span>
+              </a>
+            </div>
+            <div class="event-card">
+              <a href="#">
+                <figure>
+                  <img src="assets/img/alumni.jpeg" alt="Alumni design flyer" class="event-img" />
+                </figure>
+                <p>
+                  Join us for an inspiring conversation as you hear firsthand
+                  about...
+                </p>
+                <span class="span">
+                  <ion-icon name="calendar-number-outline" class="event-icon"></ion-icon>
+                  December 20th, 2025</span>
+                <span class="span">
+                  <ion-icon name="time-outline" class="event-icon"></ion-icon>10:00:00 AM</span>
+              </a>
+            </div>
+            <div class="event-card pics">
+              <a href="#">
+                <figure>
+                  <img src="assets/img/corhort.jpeg" alt="Workshop design flyer" class="event-img" />
+                </figure>
+                <p>
+                  The Federal University of Technology Owerri (FUTO), in a
+                  significant move...
+                </p>
+                <span class="span">
+                  <ion-icon name="calendar-number-outline" class="event-icon"></ion-icon>December 9th, 2025</span>
+              </a>
+            </div>
+            <div class="event-card">
+              <a href="#">
+                <figure>
+                  <img src="assets/img/post.jpg" alt="Postutme design flyer" class="event-img" />
+                </figure>
+                <p>
+                  The Postgraduate School of the Federal University of
+                  Technology...
+                </p>
+                <span class="span">
+                  <ion-icon name="calendar-number-outline" class="event-icon"></ion-icon>November 9th, 2025</span>
+              </a>
+            </div>
+            <div class="event-card">
+              <a href="#">
+                <figure>
+                  <img src="assets/img/logo.png" alt="NACOS design flyer" class="event-img" />
+                </figure>
+                <p>
+                  ADVERTISEMENT FOR 2025/2026 FUTO POST-UTME SCREENING
+                  EXERCISE FOR SUPPLEMENTARY ADDMISSION
+                </p>
+                <span class="span">
+                  <ion-icon name="calendar-number-outline" class="event-icon"></ion-icon>December 9th, 2025</span>
+              </a>
+            </div>
+          </div>
+          <a href="#" class="event-link">See More</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ------------ archive --------------- -->
+    <section id="archive" class="container con-gap">
+      <h2 class="secondary-h2">Archive</h2>
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th>Title</th>
+            <th>Date</th>
+            <th>Category</th>
+          </tr>
+        </thead>
+        <tbody id="archiveTableBody">
+          <tr>
+            <td colspan="3">Loading archive data...</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+  </main>
+  <footer>
+    <div class="footer">
+      <div class="footer-top">
+        <div class="department">
+          <figure>
+            <img src="assets/img/logo.png" alt="Futo logo" class="futo-logo" />
+          </figure>
+
+          <p class="fed">Dept. of Computer Science</p>
+        </div>
+
+        <div class="icon-box">
+          <ion-icon name="mail-outline" class="icon"></ion-icon>
+          <a href="mailto:info@futo.edu.ng"> info@futo.edu.ng</a>
+        </div>
+        <div class="icon-box">
+          <ion-icon name="call-outline" class="icon"></ion-icon>
+          <a href="tel:+2348067153799"> +2348067153799</a>
+        </div>
+        <div class="icon-box">
+          <ion-icon name="home-outline" class="icon"></ion-icon>
+          <address>1526, PMB, Owerri, Ihiagwa</address>
+        </div>
+      </div>
+      <div class="footer-gap">
+        <a href="#announcements">Announcement</a>
+        <a href="#events">Events</a>
+        <a href="#archive">Archive</a>
+        <a href="register.html">Admin</a>
+        <a href="#">Results Portal</a>
+        <a href="#" class="footer-link">Course Timetable</a>
+      </div>
+      <div class="footer-gap">
+        <a href="#">News</a>
+        <a href="#">Research</a>
+        <a href="#">Academics</a>
+        <a href="#">Academic Calender</a>
+        <a href="#">Location/Map </a>
+        <a href="#">Admission</a>
+      </div>
+      <div class="footer-gap">
+        <a href="#">IEEE</a>
+        <a href="#">NCC</a>
+        <a href="#">NUC</a>
+        <a href="#">TETFUND</a>
+        <a href="#">CISCO LMS</a>
+        <a href="#" class="footer-link">FUTO Weather Repository</a>
+      </div>
+    </div>
+    <div class="footer-lst">
+      <p>
+        &copy 2025 All Rights Reserved. Federal University of Technology
+        Owerri
+      </p>
+    </div>
+  </footer>
+</body>
+
 </html>
