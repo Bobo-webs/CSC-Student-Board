@@ -2,6 +2,11 @@
 HEADER
 ============================================================ */
 
+:root {
+  --pry-color: #554606;
+  --pry-hover: #3d3205;
+}
+
 .top-admin {
   background: rgba(85, 70, 6, 0.918);
   position: sticky;
@@ -321,7 +326,7 @@ EVENTS
   text-align: center;
   color: var(--text);
   text-align: center;
-  border: 3px solid #554606ea;
+  border: 3px solid var(--pry-color);
   padding: 1.8rem 3.2rem;
   margin: 0 auto;
   border-radius: 6px;
@@ -329,7 +334,7 @@ EVENTS
 }
 
 .event-link:hover {
-  background-color: #554606ea;
+  background-color: var(--pry-hover);
   color: #fff;
 }
 
@@ -347,7 +352,7 @@ ARCHIVE
 }
 
 .styled-table thead {
-  background-color: #554606ea;
+  background-color: var(--pry-color);
   color: #fff;
 }
 

@@ -48,12 +48,8 @@ input {
   --gray: #f5f5f5;
   --black1: #222;
   --black2: #f3f3f3;
-  --pry-color: #554606ea;
-  --pry-hover: #382e05ea;
-}
-
-.fx {
-  color: var(--logo-color);
+  --pry-color: #554606;
+  --pry-hover: #3d3205;
 }
 
 body {
@@ -84,14 +80,15 @@ body {
 #progress-bar {
   width: 0;
   height: 100%;
-  background-color: var(--logo-color);
+  background-color: var(--pry-color);
 }
 
 /* Loading overlay base */
 #loading-overlay {
   position: fixed;
   inset: 0;
-  background: var(--pry-color);
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
   display: none;
   align-items: center;
   justify-content: center;
@@ -128,7 +125,7 @@ body {
   position: fixed;
   width: 200px;
   height: 100%;
-  background: var(--pry-color);
+  background-color: var(--pry-color);
   border-left: 10px solid var(--pry-color);
   transition: 0.5s;
   overflow: hidden;
@@ -153,7 +150,7 @@ body {
   border-bottom-left-radius: 30px;
 }
 
-.navigation ul li:nth-child(3) {
+.navigation ul li:nth-child(4) {
   margin-top: 40vh;
 }
 
@@ -163,7 +160,7 @@ body {
 
 .navigation ul li:nth-child(1) {
   margin-top: -5px;
-  margin-bottom: 40px;
+  margin-bottom: 20vh;
 }
 
 .navigation ul li a {
@@ -183,15 +180,15 @@ body {
   position: relative;
   display: block;
   min-width: 60px;
-  height: 60px;
+  min-height: 60px;
   line-height: 70px;
   text-align: center;
   z-index: 1;
 }
 
 .navigation ul li a .icon {
-  width: 40px;
-  height: 30px;
+  min-width: 40px;
+  min-height: 30px;
 }
 
 .navigation ul li a .icon i {
@@ -199,8 +196,8 @@ body {
 }
 
 .navigation ul li a .icon img {
-  margin-top: 1.5rem;
-  width: 1.2rem;
+  margin-top: 1.4rem;
+  width: 1.5rem;
 }
 
 .navigation ul li a .title {
@@ -221,7 +218,6 @@ body {
   top: -50px;
   width: 50px;
   height: 50px;
-  background-color: transparent;
   border-radius: 50%;
   box-shadow: 35px 35px 0 10px var(--white);
   pointer-events: none;
@@ -234,7 +230,6 @@ body {
   bottom: -50px;
   width: 50px;
   height: 50px;
-  background-color: transparent;
   border-radius: 50%;
   box-shadow: 35px -35px 0 10px var(--white);
   pointer-events: none;
@@ -250,7 +245,7 @@ body {
   width: calc(100% - 200px);
   left: 200px;
   height: 100%;
-  min-height: 100vh;
+  min-height: fit-content;
   background-color: #fff;
   transition: 0.5s;
   display: flex;
@@ -287,7 +282,8 @@ body {
   z-index: 2000;
   padding: 3px;
   border-radius: 5px;
-  border: 1px solid var(--white);
+  border: 1px solid var(--pry-color);
+  background-color: #fff;
 }
 
 .toggle img {
@@ -295,33 +291,17 @@ body {
   height: 20px;
 }
 
-.icon img {
-  width: 35px;
-  height: 20px;
-}
-
-.brand {
-  margin-left: -1.7em;
-}
-
-#searchInput {
-  height: 35px;
-  border-radius: 20px;
-  margin-left: 0.3rem;
-  padding: 1rem 0.8rem 1rem 1rem;
-  text-align: center;
-}
-
-.settings {
+.home {
   cursor: pointer;
 }
 
-.settings a {
+.home a {
   font-size: 1.5rem;
+  color: var(--pry-color);
 }
 
 @media (max-width: 480px) {
-  .settings a {
+  .home a {
     font-size: 1.2rem;
   }
 }
@@ -330,52 +310,108 @@ body {
 
 
 /* ======================== Popup style ======================= */
+/* ================== POPUP OVERLAY ================== */
+.popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.4);
+  /* dark transparent backdrop */
+  backdrop-filter: blur(8px);
+  /* blur background */
+  -webkit-backdrop-filter: blur(8px);
+  display: none;
+  z-index: 999;
+  transition: opacity 0.3s ease;
+}
+
+.popup-overlay.show {
+  display: block;
+  opacity: 1;
+}
+
+/* ================== POPUP STYLING ================== */
 #popup,
 #confirmationPopup {
   position: fixed;
   top: 50%;
   left: 50%;
-  transform: translate(-50%, -50%);
-  padding: 20px;
-  background-color: var(--pry-color);
-  border: 1px solid var(--white);
-  border-radius: 10px;
+  transform: translate(-50%, -50%) scale(0.95);
+  padding: 25px 30px;
+  background: var(--pry-color);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 12px;
   display: none;
   z-index: 1000;
   text-align: center;
-  width: 300px;
+  width: 340px;
   color: var(--white);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  animation: fadeInUp 0.3s ease forwards;
 }
 
+/* Show state */
 #popup.show,
 #confirmationPopup.show {
   display: block;
+  transform: translate(-50%, -50%) scale(1);
+  transition: transform 0.25s ease;
 }
 
+/* ================== HEADER CLOSE BUTTON ================== */
 .popup .close,
 .close-popup {
   position: absolute;
-  top: 5px;
+  top: 8px;
   right: 10px;
+  font-size: 18px;
   cursor: pointer;
+  color: var(--white);
+  transition: color 0.3s ease;
 }
 
+.popup .close:hover,
+.close-popup:hover {
+  color: #ff4b4b;
+}
+
+/* ================== BUTTONS ================== */
 .confirm-button {
   padding: 10px 20px;
   margin: 10px;
   border: none;
   cursor: pointer;
-  border-radius: 5px;
+  border-radius: 8px;
+  font-weight: bold;
+  transition: all 0.3s ease;
 }
 
 #confirmYes {
-  background-color: #dc3545;
-  color: black;
+  background: linear-gradient(135deg, #ff5555, #dc3545);
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(255, 85, 85, 0.3);
 }
 
 #confirmNo {
-  background-color: limegreen;
-  color: black;
+  background: linear-gradient(135deg, #32cd32, #00a300);
+  color: #fff;
+  box-shadow: 0 3px 10px rgba(50, 205, 50, 0.3);
+}
+
+.confirm-button:hover {
+  transform: translateY(-2px);
+}
+
+/* ================== ANIMATION ================== */
+@keyframes fadeInUp {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, -60%) scale(0.9);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -50%) scale(1);
+  }
 }
 
 /* ====================== Responsive Design ========================== */
@@ -426,10 +462,6 @@ body {
     z-index: 10001;
   }
 
-  #searchInput {
-    width: 110px;
-  }
-
   .main.active {
     left: 0px;
   }
@@ -438,28 +470,16 @@ body {
   #confirmationPopup {
     width: 250px;
   }
-
-  p,
-  h1,
-  h2,
-  h3,
-  h4,
-  h5,
-  table,
-  a {
-    font-size: small;
-  }
 }
 
 
 /* ========== ANNOUNCEMENT MANAGER ========== */
 .admin-section {
-  background: #fff;
+  background: #fff !important;
   border-radius: 12px;
   padding: 20px;
-  margin-top: 2rem;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-  width: 100%;
+  width: 90%;
   max-width: 100%;
 }
 
@@ -551,7 +571,7 @@ body {
 }
 
 .announcement-table th {
-  background: #554606ea;
+  background: var(--pry-color);
   color: #fff;
   font-weight: 600;
 }
@@ -580,7 +600,8 @@ body {
   font-weight: 600;
   font-size: 13px;
   transition: 0.3s ease;
-  flex-shrink: 0; /* keeps buttons from shrinking on narrow screens */
+  flex-shrink: 0;
+  /* keeps buttons from shrinking on narrow screens */
 }
 
 .edit-ann {
@@ -606,7 +627,7 @@ body {
 .divider {
   margin: 2rem 0;
   border: 0;
-  height: 1px;
+  height: 5px;
   background: rgba(0, 0, 0, 0.1);
 }
 

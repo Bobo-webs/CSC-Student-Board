@@ -13,8 +13,8 @@ html {
 }
 
 :root {
-  --pry-color: #554606ea;
-  --pry-hover: #382e05ea;
+  --pry-color: #554606;
+  --pry-hover: #3d3205;
 }
 
 * {
