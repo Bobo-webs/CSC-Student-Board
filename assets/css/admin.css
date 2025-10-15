@@ -193,6 +193,7 @@ body {
 
 .navigation ul li a .icon i {
   font-size: 1.2rem;
+  margin-left: 30px;
 }
 
 .navigation ul li a .icon img {
@@ -212,7 +213,7 @@ body {
 }
 
 .active-link a span {
-  color: #947a05;
+  color: #bc9a06;
 }
 
 /* --------- curve outside ---------- */
@@ -633,7 +634,7 @@ body {
   margin: 2rem 0;
   border: 0;
   height: 5px;
-  background: rgba(0, 0, 0, 0.1);
+  background: var(--black1);
 }
 
 /* ===== RESPONSIVENESS ===== */
