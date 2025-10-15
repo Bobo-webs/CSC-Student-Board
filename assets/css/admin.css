@@ -325,7 +325,7 @@ body {
   /* blur background */
   -webkit-backdrop-filter: blur(8px);
   display: none;
-  z-index: 9999999;
+  z-index: 999;
   transition: opacity 0.3s ease;
 }
 
@@ -444,7 +444,7 @@ body {
   .navigation {
     width: 100%;
     left: -100%;
-    z-index: 1000;
+    z-index: 998;
     transition: 0.1s;
   }
 
