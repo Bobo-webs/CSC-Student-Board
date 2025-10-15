@@ -208,6 +208,7 @@ body {
   line-height: 67px;
   text-align: start;
   white-space: nowrap;
+  margin-left: 1.3rem;
 }
 
 .active-link a span {
@@ -324,7 +325,7 @@ body {
   /* blur background */
   -webkit-backdrop-filter: blur(8px);
   display: none;
-  z-index: 999;
+  z-index: 9999999;
   transition: opacity 0.3s ease;
 }
 
