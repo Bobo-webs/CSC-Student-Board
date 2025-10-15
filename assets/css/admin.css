@@ -151,7 +151,7 @@ body {
 }
 
 .navigation ul li:nth-child(4) {
-  margin-top: 40vh;
+  margin-top: 20vh;
 }
 
 .navigation ul li:hover {
@@ -208,6 +208,10 @@ body {
   line-height: 67px;
   text-align: start;
   white-space: nowrap;
+}
+
+.active-link a span {
+  color: #947a05;
 }
 
 /* --------- curve outside ---------- */
