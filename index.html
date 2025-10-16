@@ -88,19 +88,19 @@
 
 
     <section id="events" class="events">
-  <div class="container con-gap">
-    <div>
-      <h2 class="secondary-h2">Upcoming Events</h2>
+      <div class="container con-gap">
+        <div>
+          <h2 class="secondary-h2">Upcoming Events</h2>
 
-      <!-- Grid for dynamic events -->
-      <div id="eventsGrid" class="grid grid-tempt-col-3 margin-bot">
-        <!-- Event cards will be loaded dynamically -->
+          <!-- Grid for dynamic events -->
+          <div id="eventsGrid" class="grid grid-tempt-col-3 margin-bot">
+            <!-- Event cards will be loaded dynamically -->
+          </div>
+
+          <a href="#" class="event-link">See More</a>
+        </div>
       </div>
-
-      <a href="#" class="event-link">See More</a>
-    </div>
-  </div>
-</section>
+    </section>
 
 
     <!-- ------------ archive --------------- -->
@@ -179,6 +179,42 @@
       </p>
     </div>
   </footer>
+
+  <!-- =================== Scripts =====================  -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const menuBtn = document.querySelector(".menu-toggle");
+      const navLinks = document.querySelector(".admin-nav");
+
+      if (!menuBtn || !navLinks) return;
+
+      menuBtn.addEventListener("click", function (e) {
+        e.stopPropagation(); // avoid clicks leaking
+        navLinks.classList.toggle("show-menu");
+      });
+
+      // Close menu when clicking outside
+      document.addEventListener("click", function (e) {
+        if (!navLinks.classList.contains("show-menu")) return;
+        if (!navLinks.contains(e.target) && !menuBtn.contains(e.target)) {
+          navLinks.classList.remove("show-menu");
+        }
+      });
+
+      // Close on escape key
+      document.addEventListener("keydown", function (e) {
+        if (e.key === "Escape") navLinks.classList.remove("show-menu");
+      });
+    });
+
+    document.querySelectorAll(".admin-nav a").forEach((link) => {
+      link.addEventListener("click", () => {
+        document.getElementById("nav-links").classList.remove("active");
+      });
+    });
+
+  </script>
+
 </body>
 
 </html>

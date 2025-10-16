@@ -8,8 +8,12 @@ HEADER
 }
 
 .top-admin {
-  background: rgba(85, 70, 6, 0.918);
-  position: sticky;
+  background: var(--pry-color);
+  position: fixed;
+  width: 100%;
+  height: 100px;
+  margin-top: -100px;
+  z-index: 9999;
 }
 
 .nav-grid {
@@ -121,6 +125,12 @@ HEADER
 /* ==============================================================
 MAIN ADMIN CONTENT
 ============================================================ */
+
+main {
+  margin-top: 0px;
+}
+
+
 .q {
   margin-top: 12.8rem;
 }
@@ -131,92 +141,6 @@ MAIN ADMIN CONTENT
   line-height: 1.6;
 }
 
-.form {
-  margin-top: 4.8rem;
-  align-self: self-start;
-}
-
-.form-flex {
-  display: flex;
-  flex-direction: column;
-  gap: 2.4rem;
-}
-
-.form-flex-sub {
-  display: flex;
-  flex-direction: column;
-}
-
-.form-h2 {
-  justify-self: center;
-  font-size: 3rem;
-  font-weight: 600;
-  color: #fff;
-  margin-bottom: 4.8rem;
-  font-family: "rubik", sans-serif;
-}
-
-.form-flex label {
-  color: #fff;
-  font-size: 1.8rem;
-  font-weight: 500;
-}
-
-.form-flex input {
-  border: none;
-  width: 100%;
-  border-bottom: 1px solid #fff;
-  color: #fff;
-  outline: none;
-  background: transparent;
-  padding: 0.5rem 0.5rem;
-}
-
-.btn-reg:link,
-.btn-reg:active {
-  display: inline-block;
-  width: 100%;
-  font-size: 1.8rem;
-  text-align: center;
-  color: #fff;
-  margin: 3.2rem 0 3.2rem 0;
-  background-color: rgb(85, 71, 6);
-  border-radius: 6px;
-  padding: 1.2rem;
-  transition: all ease-in 0.3s;
-}
-
-.btn-reg:hover {
-  background-color: #7e6908;
-}
-
-.form p,
-.signin p {
-  color: #fff;
-  text-align: center;
-  font-weight: 600;
-  padding-bottom: 3.2rem;
-}
-
-.form p a,
-.signin p a {
-  color: rgb(3, 3, 183);
-  font-weight: 600;
-}
-
-.signin {
-  display: flex;
-  flex-direction: column;
-  gap: 2.4rem;
-  justify-content: center;
-  align-items: center;
-  margin-top: 9.6rem;
-}
-
-.signin form {
-  width: 100%;
-  max-width: 70rem;
-}
 /* ==============================================================
 HOME
 ============================================================= */
@@ -237,8 +161,9 @@ HOME
 .home-hero {
   background-image: linear-gradient(rgba(0, 0, 0, 0.646)),
     url(../img/futo-3.jpg);
-  height: 80%;
+  height: 85vh;
   background-size: cover;
+  margin-top: 100px;
 }
 
 .home-h1 {
@@ -255,7 +180,7 @@ HOME
 }
 
 .top-admin.top-hero {
-  background: rgba(85, 70, 6, 0.918);
+  background: var(--pry-color);
 }
 
 .title-con {
