@@ -130,17 +130,6 @@ main {
   margin-top: 0px;
 }
 
-
-.q {
-  margin-top: 12.8rem;
-}
-
-.q p {
-  font-size: 2rem;
-  color: #fff;
-  line-height: 1.6;
-}
-
 /* ==============================================================
 HOME
 ============================================================= */
@@ -161,7 +150,7 @@ HOME
 .home-hero {
   background-image: linear-gradient(rgba(0, 0, 0, 0.646)),
     url(../img/futo-3.jpg);
-  height: 85vh;
+  height: 82vh;
   background-size: cover;
   margin-top: 100px;
 }
