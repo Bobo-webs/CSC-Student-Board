@@ -200,7 +200,7 @@ function editAnnouncement(adminUid, id) {
           .then(() => {
             announcementForm.reset();
             announcementForm.querySelector(".submit-btn").textContent =
-              "Add Announcement";
+              "Add Announcement +";
             announcementForm.onsubmit = defaultAnnouncementSubmit;
             alert("✅ Announcement updated!");
           })
