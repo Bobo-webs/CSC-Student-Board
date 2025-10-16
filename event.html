@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Dashboard</title>
+
+    <!-- ======= Styles ====== -->
+    <link rel="icon" href="/assets/img/logo.png">
+    <link rel="stylesheet" href="./assets/css/admin.css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+        integrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer">
+
+    <!-- ======== Script ======= -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.12.1/firebase-database.js"></script>
+    <script type="module" src="./assets/js/event.js"></script>
+</head>
+
+<body>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay">
+        <div class="loader"></div>
+    </div>
+
+
+    <!-- =============== Navigation ================ -->
+    <div class="container" id="dashboard-content" style="display: none;">
+        <div class="navigation">
+            <ul>
+                <li>
+                    <a href="admin.html">
+                        <span class="icon">
+                            <img src="./assets/img/logo.png" alt="">
+                        </span>
+                        <span class="title brand">
+                            Admin
+                        </span>
+                    </a>
+                </li>
+
+                <li>
+                    <a href="admin.html">
+                        <span class="icon">
+                            <i class="fa-solid fa-bullhorn"></i>
+                        </span>
+                        <span class="title">Announce</span>
+                    </a>
+                </li>
+
+                <li class="active-link">
+                    <a href="event.html">
+                        <span class="icon">
+                            <i class="fa-solid fa-calendar-plus"></i>
+                        </span>
+                        <span class="title">Events</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a id="logoutButton">
+                        <span class="icon">
+                            <i class="fa-solid fa-right-from-bracket"></i>
+                        </span>
+                        <span class="title">Sign Out</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+
+        <!-- ========================= Main ==================== -->
+        <div class="main">
+            <div class="topbar">
+                <div></div>
+                <div class="toggle">
+                    <img src="./assets/img/menu.png" alt="">
+                </div>
+
+                <div class="home">
+                    <a href="admin.html">
+                        <i class="fa-solid fa-home"></i>
+                    </a>
+                </div>
+            </div>
+
+            <!-- ======================= Event Manager ================== -->
+            <h1 style="color: var(--pry-color);">UPCOMING EVENTS</h1>
+            <section id="eventManager" class="admin-section event-section">
+                <h3>📅 Manage Upcoming Events</h3>
+
+                <!-- Event Form -->
+                <form id="eventForm" class="event-form">
+                    <div class="form-group">
+                        <label for="eventDescription">Description</label>
+                        <textarea id="eventDescription" rows="3" placeholder="Enter event description"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="eventDate">Date</label>
+                        <input type="date" id="eventDate" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="eventTime">Time</label>
+                        <input type="time" id="eventTime" />
+                    </div>
+
+                    <div class="form-group">
+                        <label for="eventImage">Image</label>
+                        <input type="file" id="eventImage" accept="image/*" />
+                    </div>
+
+                    <button type="submit" class="submit-btn">Add Event +</button>
+                </form>
+
+                <hr class="divider event-divider" />
+
+                <!-- Event List Table -->
+                <h3>🗂️ Existing Events</h3>
+                <div class="table-container event-table-container">
+                    <table class="event-table">
+                        <thead>
+                            <tr>
+                                <th>Description</th>
+                                <th>Date</th>
+                                <th>Time</th>
+                                <th>Image</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="eventsTableBody"></tbody>
+                    </table>
+                </div>
+            </section>
+
+
+
+
+
+
+
+            <!-- ========================== Popups ====================== -->
+            <!-- Blurred background overlay -->
+            <div class="popup-overlay" id="popupOverlay"></div>
+
+            <!-- Actual popup content -->
+            <div id="confirmationPopup" class="popup">
+                <div class="popup-content">
+                    <span id="confirmationMessage">Are you sure you want to log out?</span>
+                    <div class="popup-buttons">
+                        <button id="confirmYes" class="confirm-button">Yes</button>
+                        <button id="confirmNo" class="confirm-button">No</button>
+                    </div>
+                </div>
+            </div>
+
+
+
+            <div id="popup" class="popup">
+                <span id="popup-message"></span>
+                <span class="close-popup">&times;</span>
+            </div>
+
+            <!-- =================== Scripts =====================  -->
+            <script>
+                // ==================== Menu Toggle ===================== //
+                let toggle = document.querySelector(".toggle");
+                let navigation = document.querySelector(".navigation");
+                let main = document.querySelector(".main");
+
+                toggle.onclick = function () {
+                    navigation.classList.toggle("active");
+                    main.classList.toggle("active");
+                };
+
+                // ========== Close popup when clicking outside of it ========== //
+                window.onclick = function (event) {
+                    const popup = document.getElementById('popup');
+                    if (event.target === popup) {
+                        popup.style.display = 'none';
+                    }
+                }
+
+                // Close popup when clicking the close button
+                document.querySelector('.close-popup').onclick = function () {
+                    document.getElementById('popup').style.display = 'none';
+                }
+            </script>
+</body>
+
+</html>

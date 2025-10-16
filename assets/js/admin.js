@@ -41,7 +41,6 @@ const confirmNo = document.getElementById("confirmNo");
 const confirmationPopup = document.getElementById("confirmationPopup");
 const loadingScreen = document.getElementById("loading-overlay");
 const dashboardContent = document.getElementById("dashboard-content");
-const popupOverlay = document.getElementById("popupOverlay"); // 👈 Added overlay
 
 // ====================== LOADING HANDLER ======================
 function showLoadingScreen() {
@@ -116,7 +115,7 @@ function fetchAnnouncements(adminUid) {
           <td>${data.category || "N/A"}</td>
           <td>${data.content || "N/A"}</td>
           <td>${new Date(data.timestamp).toLocaleString()}</td>
-          <td class="action-buttons">
+          <td>
             <button class="edit-ann" data-id="${child.key}">Edit</button>
             <button class="delete-ann" data-id="${child.key}">Delete</button>
           </td>
@@ -256,23 +255,15 @@ function defaultAnnouncementSubmit(e) {
     });
 }
 
-// ====================== LOGOUT POPUP ======================
-function showPopup() {
-  confirmationPopup.classList.add("show");
-  popupOverlay.classList.add("show");
-}
-
-function hidePopup() {
-  confirmationPopup.classList.remove("show");
-  popupOverlay.classList.remove("show");
-}
-
-logoutButton.addEventListener("click", showPopup);
+// ====================== LOGOUT ======================
+logoutButton.addEventListener("click", () => {
+  confirmationPopup.style.display = "block";
+});
 
 confirmYes.addEventListener("click", () => {
   signOut(auth)
     .then(() => {
-      hidePopup();
+      confirmationPopup.style.display = "none";
       redirectToLogin();
     })
     .catch((error) => {
@@ -280,5 +271,6 @@ confirmYes.addEventListener("click", () => {
     });
 });
 
-confirmNo.addEventListener("click", hidePopup);
-popupOverlay.addEventListener("click", hidePopup); // close on overlay click
+confirmNo.addEventListener("click", () => {
+  confirmationPopup.style.display = "none";
+});

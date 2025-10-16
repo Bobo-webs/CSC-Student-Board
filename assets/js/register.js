@@ -191,10 +191,6 @@ submit.addEventListener("click", async (event) => {
           lastname: lastnameValue,
           email: emailValue,
           role: "user",
-          balance: 0,
-          investments: 0,
-          deposits: 0,
-          referrals: 0,
         })
           .then(() => {
             hideLoading(); // Hide loading after success

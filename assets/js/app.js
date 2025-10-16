@@ -46,23 +46,19 @@ function fetchAnnouncements() {
           });
         });
 
-        // Sort by latest timestamp
-        allAnnouncements.sort((a, b) => b.timestamp - a.timestamp);
+        // Sort by latest date (if date is a readable string like "2025-10-13")
+        allAnnouncements.sort((a, b) => new Date(b.date) - new Date(a.date));
 
         // Render announcements
         allAnnouncements.forEach((item) => {
-          const date = new Date(item.timestamp).toLocaleDateString("en-US", {
-            year: "numeric",
-            month: "long",
-            day: "numeric",
-          });
+          const date = item.date || "No date";
 
           const div = document.createElement("div");
           div.classList.add("Latest");
           div.innerHTML = `
-            <p><strong>${item.title}</strong></p>
-            <span>${date} • ${item.category}</span>
-            <p>${item.content}</p>
+            <p><strong>${item.title || "Untitled"}</strong></p>
+            <span>${date} • ${item.category || "Uncategorized"}</span>
+            <p>${item.content || ""}</p>
           `;
           announcementsContainer.appendChild(div);
         });
@@ -96,23 +92,15 @@ function fetchArchive() {
           });
         });
 
-        // Sort newest first
-        allArchives.sort((a, b) => b.timestamp - a.timestamp);
+        // Sort newest first using date
+        allArchives.sort((a, b) => new Date(b.date) - new Date(a.date));
 
         // Render into the archive table
         allArchives.forEach((item) => {
-          const date =
-            item.date ||
-            new Date(item.timestamp).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "short",
-              day: "numeric",
-            });
-
           const row = document.createElement("tr");
           row.innerHTML = `
             <td>${item.title || "Untitled"}</td>
-            <td>${date}</td>
+            <td>${item.date || "No date"}</td>
             <td>${item.category || "Uncategorized"}</td>
           `;
           archiveTableBody.appendChild(row);
@@ -130,7 +118,48 @@ function fetchArchive() {
   );
 }
 
-
 // ====================== INIT ======================
 fetchAnnouncements();
 fetchArchive();
+
+
+// ====================== FETCH EVENTS ======================
+const eventsGrid = document.getElementById("eventsGrid");
+
+function fetchEvents() {
+  const eventsRef = ref(database, "events");
+
+  onValue(eventsRef, (snapshot) => {
+    eventsGrid.innerHTML = "";
+    if (snapshot.exists()) {
+      const events = Object.values(snapshot.val()).sort((a, b) => new Date(a.date) - new Date(b.date));
+
+      events.forEach((event) => {
+        const card = document.createElement("div");
+        card.classList.add("event-card");
+        card.innerHTML = `
+          <a href="#">
+            <figure>
+              <img src="${event.imageURL}" alt="${event.title}" class="event-img" />
+            </figure>
+            <h4>${event.title}</h4>
+            <p>${event.description}</p>
+            <span class="span">
+              <ion-icon name="calendar-number-outline" class="event-icon"></ion-icon>
+              ${event.date}
+            </span>
+            <span class="span">
+              <ion-icon name="time-outline" class="event-icon"></ion-icon>
+              ${event.time}
+            </span>
+          </a>
+        `;
+        eventsGrid.appendChild(card);
+      });
+    } else {
+      eventsGrid.innerHTML = `<p>No upcoming events available.</p>`;
+    }
+  });
+}
+
+fetchEvents();
