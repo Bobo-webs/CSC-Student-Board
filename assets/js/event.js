@@ -12,7 +12,6 @@ import {
     push,
     set,
 } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-database.js";
-import { getStorage, ref as storageRef, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-storage.js";
 
 // ====================== FIREBASE CONFIG ======================
 const firebaseConfig = {
@@ -30,7 +29,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const database = getDatabase(app);
-const storage = getStorage(app);
 
 // ====================== DOM ELEMENTS ======================
 const logoutButton = document.getElementById("logoutButton");
@@ -48,7 +46,7 @@ const eventTimeInput = document.getElementById("eventTime");
 const eventImageInput = document.getElementById("eventImage");
 const eventsTable = document.getElementById("eventsTableBody");
 
-let editingEventId = null; // Track if editing
+let editingEventId = null; // Track edit
 
 // ====================== LOADING HANDLER ======================
 function showLoadingScreen() {
@@ -93,7 +91,19 @@ function checkUserRole(uid) {
 }
 
 // ====================== EVENT MANAGEMENT ======================
-// Add or Update Event
+
+// Convert image file to Base64
+function fileToBase64(file) {
+    return new Promise((resolve, reject) => {
+        if (!file) return resolve("");
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = err => reject(err);
+        reader.readAsDataURL(file);
+    });
+}
+
+// Add / Update Event
 eventForm.addEventListener("submit", async (e) => {
     e.preventDefault();
     const user = auth.currentUser;
@@ -106,33 +116,26 @@ eventForm.addEventListener("submit", async (e) => {
 
     if (!description || !date || !time) return alert("Please fill all required fields.");
 
-    let imageUrl = "";
-
+    let imageData = "";
     try {
-        if (file) {
-            const imgRef = storageRef(storage, `event-images/${Date.now()}-${file.name}`);
-            await uploadBytes(imgRef, file);
-            imageUrl = await getDownloadURL(imgRef);
-        }
+        imageData = await fileToBase64(file);
+    } catch (err) {
+        console.error("Error reading image file:", err);
+        alert("❌ Failed to read image.");
+        return;
+    }
 
-        const eventsRef = ref(database, `events/${user.uid}`);
+    const eventsRef = ref(database, `events/${user.uid}`);
+    try {
         if (editingEventId) {
-            // Update existing event
-            await update(ref(database, `events/${user.uid}/${editingEventId}`), {
-                description,
-                date,
-                time,
-                image: imageUrl || undefined
-            });
-            alert("✅ Event updated successfully!");
+            await update(ref(database, `events/${user.uid}/${editingEventId}`), { description, date, time, image: imageData });
+            alert("✅ Event updated!");
         } else {
-            // Add new event
             const newEventRef = push(eventsRef);
-            await set(newEventRef, { description, date, time, image: imageUrl });
-            alert("✅ Event added successfully!");
+            await set(newEventRef, { description, date, time, image: imageData });
+            alert("✅ Event added!");
         }
 
-        // Reset form
         eventForm.reset();
         editingEventId = null;
         eventForm.querySelector(".submit-btn").textContent = "Add Event +";
