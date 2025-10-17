@@ -1,9 +1,17 @@
 As Group 20 in the Computer Science department at Federal University of Technology, Owerri (FUTO), we developed a responsive web-based platform for CIT306 – Web Design and Programming semester project, submitted on October 14, 2025. The website serves as a centralized online notice board to enhance communication between departmental staff and students, addressing gaps in disseminating announcements, events, timetables, and updates. Key accomplishments include:
+
 Core Features Implemented 🎉: Secure admin authentication (hashed passwords, 30-min session timeouts), announcement management (create, edit, delete, categorize, reverse chronological display), event calendar (add/view events with details), archive for past notices with keyword search, and intuitive, mobile-responsive navigation.
+
 System Design and Models 📊: Followed a client-server architecture with use case diagrams, ER diagrams (entities: Users, Announcements, Events), and flowcharts for processes like login and posting. Ensured non-functional requirements such as performance (<3s load times, 500+ users), security (protection against SQL injection, XSS, CSRF), usability (WCAG 2.0 compliance), compatibility (cross-browser support), maintainability (modular code), and scalability.
+
 Technologies Used 💻: Front-end with HTML5, CSS3, and JavaScript; back-end with Firebase (BaaS for authentication/serverless logic); database via Firebase Realtime/Firestore NoSQL for real-time syncing. Tools included Figma (prototyping), Git/GitHub (version control), Visual Studio Code (editing), Postman/Jest (testing), and draw.io (diagrams).
+
 Development Process 🚀: Adopted Agile methodology over 4 weeks with weekly sprints: Week 1 (planning/SRS/wireframes), Week 2 (front-end/UI), Week 3 (back-end/database), Week 4 (testing/deployment). Emphasized collaboration via WhatsApp/Google Meet, refining based on user feedback.
+
 Testing and Quality Assurance ✅: Conducted unit, integration, system, usability, performance, security, and cross-browser tests. All major test cases passed, with an average page load of 2.4s and stability under 500 users.
+
 Deployment 🌐: Hosted front-end on Netlify (https://departmental-student-board.netlify.app/) and back-end on Vercel (final site: https://csc-student-board-20.vercel.app/). Enabled continuous deployment from GitHub for future updates.
+
 Challenges and Lessons 🌱: Overcame time constraints, API integration errors, database issues, and merge conflicts through planning and communication. Learned the value of early testing, version control, and user-centered design for real-world applications.
+
 This project complements FUTO's systems by filling departmental communication gaps, with future scope for student accounts and ERP integration. 🌟
