@@ -1,4 +1,4 @@
-// ====================== IMPORTS ======================
+// ====================== IMPORTS ====================== 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
 import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-auth.js";
 import {
@@ -46,7 +46,7 @@ const eventTimeInput = document.getElementById("eventTime");
 const eventImageInput = document.getElementById("eventImage");
 const eventsTable = document.getElementById("eventsTableBody");
 
-let editingEventId = null; // Track edit
+let editingEventId = null;
 
 // ====================== LOADING HANDLER ======================
 function showLoadingScreen() {
@@ -81,7 +81,7 @@ function checkUserRole(uid) {
         .then(snapshot => {
             if (snapshot.exists() && snapshot.val().includes("admin")) {
                 hideLoadingScreen();
-                fetchEvents(uid);
+                fetchEvents(); // No longer passing UID
             } else redirectToLogin();
         })
         .catch(err => {
@@ -125,10 +125,10 @@ eventForm.addEventListener("submit", async (e) => {
         return;
     }
 
-    const eventsRef = ref(database, `events/${user.uid}`);
+    const eventsRef = ref(database, "events");
     try {
         if (editingEventId) {
-            await update(ref(database, `events/${user.uid}/${editingEventId}`), { description, date, time, image: imageData });
+            await update(ref(database, `events/${editingEventId}`), { description, date, time, image: imageData });
             alert("✅ Event updated!");
         } else {
             const newEventRef = push(eventsRef);
@@ -139,7 +139,7 @@ eventForm.addEventListener("submit", async (e) => {
         eventForm.reset();
         editingEventId = null;
         eventForm.querySelector(".submit-btn").textContent = "Add Event +";
-        fetchEvents(user.uid);
+        fetchEvents();
 
     } catch (err) {
         console.error("Error saving event:", err);
@@ -147,9 +147,9 @@ eventForm.addEventListener("submit", async (e) => {
     }
 });
 
-// Fetch Events
-function fetchEvents(adminUid) {
-    onValue(ref(database, `events/${adminUid}`), snapshot => {
+// Fetch Events (shared for all admins)
+function fetchEvents() {
+    onValue(ref(database, "events"), snapshot => {
         eventsTable.innerHTML = "";
         if (!snapshot.exists()) {
             eventsTable.innerHTML = `<tr><td colspan="5" style="text-align:center;">No events yet.</td></tr>`;
@@ -160,26 +160,26 @@ function fetchEvents(adminUid) {
             const data = child.val();
             const row = document.createElement("tr");
             row.innerHTML = `
-        <td>${data.description || "N/A"}</td>
-        <td>${data.date || "N/A"}</td>
-        <td>${data.time || "N/A"}</td>
-        <td>${data.image ? `<img src="${data.image}" style="width:80px;border-radius:6px;">` : "No Image"}</td>
-        <td>
-          <button class="edit-event" data-id="${child.key}">Edit</button>
-          <button class="delete-event" data-id="${child.key}">Delete</button>
-        </td>
-      `;
+                <td>${data.description || "N/A"}</td>
+                <td>${data.date || "N/A"}</td>
+                <td>${data.time || "N/A"}</td>
+                <td>${data.image ? `<img src="${data.image}" style="width:80px;border-radius:6px;">` : "No Image"}</td>
+                <td>
+                    <button class="edit-event" data-id="${child.key}">Edit</button>
+                    <button class="delete-event" data-id="${child.key}">Delete</button>
+                </td>
+            `;
             eventsTable.appendChild(row);
         });
 
-        document.querySelectorAll(".edit-event").forEach(btn => btn.onclick = () => startEditEvent(adminUid, btn.dataset.id));
-        document.querySelectorAll(".delete-event").forEach(btn => btn.onclick = () => deleteEvent(adminUid, btn.dataset.id));
+        document.querySelectorAll(".edit-event").forEach(btn => btn.onclick = () => startEditEvent(btn.dataset.id));
+        document.querySelectorAll(".delete-event").forEach(btn => btn.onclick = () => deleteEvent(btn.dataset.id));
     });
 }
 
 // Start editing event
-function startEditEvent(adminUid, id) {
-    get(ref(database, `events/${adminUid}/${id}`)).then(snapshot => {
+function startEditEvent(id) {
+    get(ref(database, `events/${id}`)).then(snapshot => {
         if (!snapshot.exists()) return;
         const data = snapshot.val();
         eventDescriptionInput.value = data.description;
@@ -191,10 +191,10 @@ function startEditEvent(adminUid, id) {
 }
 
 // Delete Event
-function deleteEvent(adminUid, id) {
+function deleteEvent(id) {
     if (!confirm("Delete this event?")) return;
-    remove(ref(database, `events/${adminUid}/${id}`))
-        .then(() => fetchEvents(adminUid))
+    remove(ref(database, `events/${id}`))
+        .then(() => fetchEvents())
         .catch(err => {
             console.error("Error deleting event:", err);
             alert("❌ Failed to delete event.");

@@ -1,4 +1,4 @@
-// ====================== IMPORTS ======================
+// ====================== IMPORTS ====================== 
 import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.1/firebase-app.js";
 import {
   getDatabase,
@@ -27,32 +27,24 @@ const announcementsContainer = document.querySelector("#announcements .grid");
 const archiveTableBody = document.getElementById("archiveTableBody");
 const eventsGrid = document.getElementById("eventsGrid");
 
-// Helper: parse item date (prefers item.date string, falls back to item.timestamp)
+// ====================== HELPERS ======================
 function parseItemDate(item) {
-  // If explicit date field exists and is parseable, use it.
   if (item && item.date) {
-    // Try direct Date parsing (accepts YYYY-MM-DD and other formats)
     const d = new Date(item.date);
     if (!isNaN(d)) return d;
-    // try interpreting as timestamp string
     const n = Number(item.date);
     if (!Number.isNaN(n)) {
       const dn = new Date(n);
       if (!isNaN(dn)) return dn;
     }
   }
-
-  // If timestamp field exists, use it.
   if (item && item.timestamp) {
     const t = new Date(Number(item.timestamp));
     if (!isNaN(t)) return t;
   }
-
-  // unknown -> return null
   return null;
 }
 
-// Get today's midnight for comparison
 function todayStart() {
   const t = new Date();
   t.setHours(0, 0, 0, 0);
@@ -61,55 +53,29 @@ function todayStart() {
 
 // ====================== FETCH ANNOUNCEMENTS ======================
 function fetchAnnouncements() {
-  if (!announcementsContainer) return; // safe guard
+  if (!announcementsContainer) return;
 
   const announcementsRef = ref(database, "announcements");
   onValue(
     announcementsRef,
     (snapshot) => {
-      announcementsContainer.innerHTML = ""; // Clear previous announcements
+      announcementsContainer.innerHTML = "";
 
       if (!snapshot.exists()) {
         announcementsContainer.innerHTML = `<p>No announcements yet.</p>`;
         return;
       }
 
-      // Collect all announcement items across admin nodes
-      const allAnnouncements = [];
-      const snapVal = snapshot.val();
-
-      // We don't assume structure strictly; iterate keys safely
-      for (const adminKey in snapVal) {
-        if (!Object.prototype.hasOwnProperty.call(snapVal, adminKey)) continue;
-        const adminNode = snapVal[adminKey];
-        if (!adminNode) continue;
-
-        // adminNode may be an object containing many announcements (or single)
-        for (const itemKey in adminNode) {
-          if (!Object.prototype.hasOwnProperty.call(adminNode, itemKey)) continue;
-          const item = adminNode[itemKey];
-          if (!item || typeof item !== "object") continue;
-          // Annotate with source info if needed
-          item._admin = adminKey;
-          item._id = itemKey;
-          allAnnouncements.push(item);
-        }
-      }
-
-      // Filter out items that are backdated (only show items whose date >= today).
+      const allAnnouncements = Object.values(snapshot.val() || {});
       const today = todayStart();
+
       const validAnnouncements = allAnnouncements.filter((item) => {
         const d = parseItemDate(item);
-        if (!d) {
-          // No valid date or timestamp — don't show it on the index (avoid undefined)
-          return false;
-        }
-        // compare date part only (midnight)
+        if (!d) return false;
         d.setHours(0, 0, 0, 0);
         return d >= today;
       });
 
-      // Sort by date descending (newest first). If date missing we keep them last.
       validAnnouncements.sort((a, b) => {
         const da = parseItemDate(a);
         const db = parseItemDate(b);
@@ -124,7 +90,6 @@ function fetchAnnouncements() {
         return;
       }
 
-      // Render announcements preserving your markup / css classes
       validAnnouncements.forEach((item) => {
         const d = parseItemDate(item);
         const dateStr = d
@@ -149,7 +114,6 @@ function fetchAnnouncements() {
 }
 
 // ====================== FETCH ARCHIVE ======================
-// Archive should show past announcements (date < today) — keeps everything safe in DB
 function fetchArchive() {
   if (!archiveTableBody) return;
 
@@ -157,40 +121,23 @@ function fetchArchive() {
   onValue(
     announcementsRef,
     (snapshot) => {
-      archiveTableBody.innerHTML = ""; // Clear table
+      archiveTableBody.innerHTML = "";
 
       if (!snapshot.exists()) {
         archiveTableBody.innerHTML = `<tr><td colspan="3">No archive data available.</td></tr>`;
         return;
       }
 
-      const allArchives = [];
-      const snapVal = snapshot.val();
-
-      for (const adminKey in snapVal) {
-        if (!Object.prototype.hasOwnProperty.call(snapVal, adminKey)) continue;
-        const adminNode = snapVal[adminKey];
-        if (!adminNode) continue;
-        for (const itemKey in adminNode) {
-          if (!Object.prototype.hasOwnProperty.call(adminNode, itemKey)) continue;
-          const item = adminNode[itemKey];
-          if (!item || typeof item !== "object") continue;
-          item._admin = adminKey;
-          item._id = itemKey;
-          allArchives.push(item);
-        }
-      }
-
-      // Partition into past vs future based on item.date or timestamp
+      const allAnnouncements = Object.values(snapshot.val() || {});
       const today = todayStart();
-      const pastItems = allArchives.filter((item) => {
+
+      const pastItems = allAnnouncements.filter((item) => {
         const d = parseItemDate(item);
-        if (!d) return false; // items without date we skip from archive table
+        if (!d) return false;
         d.setHours(0, 0, 0, 0);
         return d < today;
       });
 
-      // Sort newest-to-oldest (recent past first)
       pastItems.sort((a, b) => {
         const da = parseItemDate(a);
         const db = parseItemDate(b);
@@ -227,8 +174,7 @@ function fetchArchive() {
   );
 }
 
-// ====================== FETCH EVENTS ======================
-// Only show events whose date >= today (upcoming). Events stored under /events/<adminUid>/<eventId>
+// ====================== FETCH EVENTS (Modified) ======================
 function fetchEvents() {
   if (!eventsGrid) return;
 
@@ -238,51 +184,29 @@ function fetchEvents() {
     (snapshot) => {
       eventsGrid.innerHTML = "";
       if (!snapshot.exists()) {
-        eventsGrid.innerHTML = `<p>No upcoming events available.</p>`;
+        eventsGrid.innerHTML = `<p>No events available.</p>`;
         return;
       }
 
-      const allEvents = [];
-      const snapVal = snapshot.val();
+      // ✅ Fetch all events (past + present)
+      const allEvents = Object.values(snapshot.val() || {});
 
-      for (const adminKey in snapVal) {
-        if (!Object.prototype.hasOwnProperty.call(snapVal, adminKey)) continue;
-        const adminNode = snapVal[adminKey];
-        if (!adminNode) continue;
-        for (const eventKey in adminNode) {
-          if (!Object.prototype.hasOwnProperty.call(adminNode, eventKey)) continue;
-          const ev = adminNode[eventKey];
-          if (!ev || typeof ev !== "object") continue;
-          ev._admin = adminKey;
-          ev._id = eventKey;
-          allEvents.push(ev);
-        }
-      }
-
-      // Filter upcoming events: date >= today
-      const today = todayStart();
-      const upcoming = allEvents.filter((ev) => {
-        const d = parseItemDate(ev);
-        if (!d) return false;
-        d.setHours(0, 0, 0, 0);
-        return d >= today;
-      });
-
-      // Sort ascending by date so nearest upcoming first
-      upcoming.sort((a, b) => {
-        const da = parseItemDate(a), db = parseItemDate(b);
+      // Sort by date (most recent first)
+      allEvents.sort((a, b) => {
+        const da = parseItemDate(a);
+        const db = parseItemDate(b);
         if (!da && !db) return 0;
         if (!da) return 1;
         if (!db) return -1;
-        return da - db;
+        return db - da; // descending order
       });
 
-      if (upcoming.length === 0) {
-        eventsGrid.innerHTML = `<p>No upcoming events available.</p>`;
+      if (allEvents.length === 0) {
+        eventsGrid.innerHTML = `<p>No events found.</p>`;
         return;
       }
 
-      upcoming.forEach((event) => {
+      allEvents.forEach((event) => {
         const imgSrc =
           event.image || event.imageURL || "https://via.placeholder.com/400x250?text=Event+Image";
 

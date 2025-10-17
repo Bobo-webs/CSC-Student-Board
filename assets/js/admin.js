@@ -42,6 +42,15 @@ const confirmationPopup = document.getElementById("confirmationPopup");
 const loadingScreen = document.getElementById("loading-overlay");
 const dashboardContent = document.getElementById("dashboard-content");
 
+const announcementForm = document.getElementById("announcementForm");
+const titleInput = document.getElementById("announcementTitle");
+const dateInput = document.getElementById("announcementDate");
+const categoryInput = document.getElementById("announcementCategory");
+const contentInput = document.getElementById("announcementContent");
+const announcementsTable = document.getElementById("announcementsTableBody");
+
+let editingAnnouncementId = null;
+
 // ====================== LOADING HANDLER ======================
 function showLoadingScreen() {
   loadingScreen.style.display = "flex";
@@ -80,7 +89,7 @@ function checkUserRole(uid) {
     .then((snapshot) => {
       if (snapshot.exists() && snapshot.val().includes("admin")) {
         hideLoadingScreen();
-        fetchAnnouncements(uid); // Load admin announcements
+        fetchAnnouncements(); // Global announcements for all admins
       } else {
         console.warn("User is not an admin. Redirecting to login.");
         redirectToLogin();
@@ -93,16 +102,10 @@ function checkUserRole(uid) {
 }
 
 // ====================== ANNOUNCEMENT MANAGEMENT ======================
-const announcementForm = document.getElementById("announcementForm");
-const titleInput = document.getElementById("announcementTitle");
-const dateInput = document.getElementById("announcementDate");
-const categoryInput = document.getElementById("announcementCategory");
-const contentInput = document.getElementById("announcementContent");
-const announcementsTable = document.getElementById("announcementsTableBody");
 
-// Fetch announcements
-function fetchAnnouncements(adminUid) {
-  const announcementsRef = ref(database, `announcements/${adminUid}`);
+// Fetch announcements (shared for all admins)
+function fetchAnnouncements() {
+  const announcementsRef = ref(database, "announcements");
   onValue(announcementsRef, (snapshot) => {
     announcementsTable.innerHTML = "";
     if (snapshot.exists()) {
@@ -123,21 +126,13 @@ function fetchAnnouncements(adminUid) {
         announcementsTable.appendChild(row);
       });
 
-      document
-        .querySelectorAll(".edit-ann")
-        .forEach((btn) =>
-          btn.addEventListener("click", () =>
-            editAnnouncement(adminUid, btn.dataset.id)
-          )
-        );
+      document.querySelectorAll(".edit-ann").forEach((btn) =>
+        btn.addEventListener("click", () => editAnnouncement(btn.dataset.id))
+      );
 
-      document
-        .querySelectorAll(".delete-ann")
-        .forEach((btn) =>
-          btn.addEventListener("click", () =>
-            deleteAnnouncement(adminUid, btn.dataset.id)
-          )
-        );
+      document.querySelectorAll(".delete-ann").forEach((btn) =>
+        btn.addEventListener("click", () => deleteAnnouncement(btn.dataset.id))
+      );
     } else {
       announcementsTable.innerHTML = `
         <tr><td colspan="6" style="text-align:center;">No announcements yet.</td></tr>`;
@@ -145,7 +140,7 @@ function fetchAnnouncements(adminUid) {
   });
 }
 
-// Add announcement
+// Add / Update announcement
 announcementForm.addEventListener("submit", (e) => {
   e.preventDefault();
   const user = auth.currentUser;
@@ -162,23 +157,44 @@ announcementForm.addEventListener("submit", (e) => {
     return;
   }
 
-  const announcementsRef = ref(database, `announcements/${user.uid}`);
-  const newRef = push(announcementsRef);
+  const announcementsRef = ref(database, "announcements");
 
-  set(newRef, { title, date, category, content, timestamp })
-    .then(() => {
-      announcementForm.reset();
-      alert("✅ Announcement added successfully!");
+  if (editingAnnouncementId) {
+    update(ref(database, `announcements/${editingAnnouncementId}`), {
+      title,
+      date,
+      category,
+      content,
+      timestamp,
     })
-    .catch((error) => {
-      console.error("Error adding announcement:", error);
-      alert("❌ Failed to add announcement.");
-    });
+      .then(() => {
+        alert("✅ Announcement updated successfully!");
+        announcementForm.reset();
+        editingAnnouncementId = null;
+        announcementForm.querySelector(".submit-btn").textContent =
+          "Add Announcement +";
+      })
+      .catch((error) => {
+        console.error("Error updating announcement:", error);
+        alert("❌ Failed to update announcement.");
+      });
+  } else {
+    const newRef = push(announcementsRef);
+    set(newRef, { title, date, category, content, timestamp })
+      .then(() => {
+        announcementForm.reset();
+        alert("✅ Announcement added successfully!");
+      })
+      .catch((error) => {
+        console.error("Error adding announcement:", error);
+        alert("❌ Failed to add announcement.");
+      });
+  }
 });
 
 // Edit announcement
-function editAnnouncement(adminUid, id) {
-  const annRef = ref(database, `announcements/${adminUid}/${id}`);
+function editAnnouncement(id) {
+  const annRef = ref(database, `announcements/${id}`);
   get(annRef).then((snapshot) => {
     if (snapshot.exists()) {
       const data = snapshot.val();
@@ -186,37 +202,17 @@ function editAnnouncement(adminUid, id) {
       dateInput.value = data.date;
       categoryInput.value = data.category;
       contentInput.value = data.content;
+      editingAnnouncementId = id;
       announcementForm.querySelector(".submit-btn").textContent =
         "Update Announcement";
-
-      announcementForm.onsubmit = (e) => {
-        e.preventDefault();
-        update(annRef, {
-          title: titleInput.value.trim(),
-          date: dateInput.value.trim(),
-          category: categoryInput.value.trim(),
-          content: contentInput.value.trim(),
-        })
-          .then(() => {
-            announcementForm.reset();
-            announcementForm.querySelector(".submit-btn").textContent =
-              "Add Announcement +";
-            announcementForm.onsubmit = defaultAnnouncementSubmit;
-            alert("✅ Announcement updated!");
-          })
-          .catch((error) => {
-            console.error("Error updating announcement:", error);
-            alert("❌ Failed to update announcement.");
-          });
-      };
     }
   });
 }
 
 // Delete announcement
-function deleteAnnouncement(adminUid, id) {
+function deleteAnnouncement(id) {
   if (confirm("Delete this announcement?")) {
-    remove(ref(database, `announcements/${adminUid}/${id}`))
+    remove(ref(database, `announcements/${id}`))
       .then(() => alert("🗑️ Announcement deleted."))
       .catch((error) => {
         console.error("Error deleting announcement:", error);
@@ -225,52 +221,23 @@ function deleteAnnouncement(adminUid, id) {
   }
 }
 
-// Default add handler (after editing)
-function defaultAnnouncementSubmit(e) {
-  e.preventDefault();
-  const user = auth.currentUser;
-  if (!user) return alert("No admin authenticated!");
-
-  const title = titleInput.value.trim();
-  const date = dateInput.value.trim();
-  const category = categoryInput.value.trim();
-  const content = contentInput.value.trim();
-  const timestamp = Date.now();
-
-  if (!title || !date || !category || !content) {
-    alert("Please fill all fields.");
-    return;
-  }
-
-  const announcementsRef = ref(database, `announcements/${user.uid}`);
-  const newRef = push(announcementsRef);
-
-  set(newRef, { title, date, category, content, timestamp })
-    .then(() => {
-      announcementForm.reset();
-      alert("✅ Announcement added successfully!");
-    })
-    .catch((error) => {
-      console.error("Error adding announcement:", error);
-    });
+// ====================== LOGOUT ======================
+function showPopup() {
+  confirmationPopup.classList.add("show");
+  popupOverlay.classList.add("show");
 }
 
-// ====================== LOGOUT ======================
-logoutButton.addEventListener("click", () => {
-  confirmationPopup.style.display = "block";
-});
+function hidePopup() {
+  confirmationPopup.classList.remove("show");
+  popupOverlay.classList.remove("show");
+}
 
+logoutButton.addEventListener("click", showPopup);
 confirmYes.addEventListener("click", () => {
-  signOut(auth)
-    .then(() => {
-      confirmationPopup.style.display = "none";
-      redirectToLogin();
-    })
-    .catch((error) => {
-      console.error("Sign out error:", error);
-    });
+  signOut(auth).then(() => {
+    hidePopup();
+    redirectToLogin();
+  }).catch(console.error);
 });
-
-confirmNo.addEventListener("click", () => {
-  confirmationPopup.style.display = "none";
-});
+confirmNo.addEventListener("click", hidePopup);
+popupOverlay.addEventListener("click", hidePopup);
